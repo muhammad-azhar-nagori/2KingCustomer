@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1099155624718",
+    "project_id": "kings-9b7d2",
+    "storage_bucket": "kings-9b7d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1099155624718:android:09e8162028f5d577ecbd5f",
+        "android_client_info": {
+          "package_name": "com.example.housecontractors"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1099155624718-j942rqd8natm7peur3tj04ncl3ht9aqj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKjpERVeeE8IqLdqi7gWOiC24GbGgvryQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1099155624718-j942rqd8natm7peur3tj04ncl3ht9aqj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
