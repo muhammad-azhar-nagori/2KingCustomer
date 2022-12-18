@@ -42,7 +42,7 @@ class ChatProvider with ChangeNotifier {
   }
 
   Future<void> createNewChat({
-    String? otherID,
+    required String? otherID,
   }) async {
     await FirebaseFirestore.instance
         .collection("chats")
@@ -55,6 +55,18 @@ class ChatProvider with ChangeNotifier {
       ChatModel(otherID: otherID),
     );
 
+    notifyListeners();
+  }
+
+  Future<void> createOtherChat({
+    required String? otherID,
+  }) async {
+    await FirebaseFirestore.instance
+        .collection("chats")
+        .doc(otherID)
+        .collection("with")
+        .doc(loggedInUser!.uid)
+        .set({});
     notifyListeners();
   }
 

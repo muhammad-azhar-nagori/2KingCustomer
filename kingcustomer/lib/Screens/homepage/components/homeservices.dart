@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:kingcustomer/Screens/homepage/components/workers/workers_list.dart';
 import 'package:kingcustomer/helper/size_configuration.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import '../../../models/service_model.dart';
 import '../../../providers/current_user_provider.dart';
+import '../../../providers/customer_provider.dart';
 import '../../../providers/service_provider.dart';
+import 'workers/workers_list.dart';
 
 class HomeServices extends StatelessWidget {
   const HomeServices({Key? key}) : super(key: key);
@@ -16,8 +17,9 @@ class HomeServices extends StatelessWidget {
     final serviceProvider = Provider.of<ServiceProvider>(context);
     final serviceList = serviceProvider.getList;
 
-    final currentProvider = Provider.of<CurrentUserProvider>(context);
-    final loggedInUser = currentProvider.getCurrentUser(FirebaseAuth.instance.currentUser!.uid.trim());
+    final currentProvider = Provider.of<CustomerProvider>(context);
+    final loggedInUser = currentProvider
+        .getUserByID(FirebaseAuth.instance.currentUser!.uid.trim());
     List<ServiceModel> tempList = List<ServiceModel>.generate(
       0,
       (index) => serviceList.first,
@@ -25,14 +27,12 @@ class HomeServices extends StatelessWidget {
 
     List<ServiceModel> _allHomeService() {
       for (int i = 0; i < serviceList.length; i++) {
-        if (serviceList[i].serviceCategroy == true &&
-            loggedInUser.services!.contains(serviceList[i].serviceName)) {
+        if (serviceList[i].serviceCategroy == true) {
           tempList.add(serviceList[i]);
         }
       }
       return tempList;
     }
-
 
     return SizedBox(
       child: GridView.builder(
@@ -68,7 +68,9 @@ class WorkerSlide extends StatelessWidget {
         PageTransition(
             type: PageTransitionType.scale,
             alignment: Alignment.center,
-            child: WorkersList(serviceName: serviceModel.serviceName!),
+            child: WorkersList(
+              serviceName: serviceModel.serviceName!,
+            ),
             duration: const Duration(milliseconds: 550),
             inheritTheme: true,
             ctx: context),

@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:kingcustomer/Screens/profile/profile_view.dart';
 import 'package:kingcustomer/helper/size_configuration.dart';
+import 'package:kingcustomer/models/contractor_model.dart';
 import 'package:provider/provider.dart';
 import '../../../../models/workers_model.dart';
 
@@ -10,23 +12,23 @@ class WorkerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final workerModel = Provider.of<WorkerModel>(context);
+    final contractorModel = Provider.of<ContractorsModel>(context);
     return ListTile(
-      onTap: () => worker_tile_details(context, workerModel),
+      onTap: () => worker_tile_details(context, contractorModel),
       leading: SizedBox(
         height: 50,
         width: 50,
         child: CachedNetworkImage(
-          imageUrl: workerModel.profileImg!,
+          imageUrl: contractorModel.profileImageURL!,
         ),
       ),
-      title: Text(workerModel.name!),
+      title: Text(contractorModel.name!),
     );
   }
 
   // ignore: non_constant_identifier_names
   Future<dynamic> worker_tile_details(
-      BuildContext context, WorkerModel workerModel) {
+      BuildContext context, ContractorsModel contractorModel) {
     return showModalBottomSheet(
       context: context,
       backgroundColor: const Color.fromRGBO(0, 0, 0, 0),
@@ -42,98 +44,129 @@ class WorkerTile extends StatelessWidget {
             ),
           ),
           color: const Color.fromARGB(255, 255, 255, 255),
-          child: SizedBox(
-            height: setHeight(59),
-            child: Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: setHeight(1)),
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(102, 243, 215, 33),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        20,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              height: setHeight(59),
+              child: Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: setHeight(1)),
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(102, 243, 215, 33),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(
+                          20,
+                        ),
+                      ),
+                    ),
+                    height: setHeight(5),
+                    width: setWidth(85),
+                    child: Center(
+                      child: Text(
+                        "About " + contractorModel.name!,
+                        style: TextStyle(
+                            fontSize: getProportionateScreenHeight(20),
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
-                  height: setHeight(5),
-                  width: setWidth(85),
-                  child: Center(
-                    child: Text(
-                      "About " + workerModel.name!,
-                      style: TextStyle(
-                          fontSize: getProportionateScreenHeight(20),
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                Container(
-                    height: setHeight(53),
-                    color: const Color.fromARGB(255, 255, 255, 255),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: getProportionateScreenHeight(10),
-                        ),
-                        Image.network(workerModel.profileImg!),
-                        Text(
-                          "Email: " + workerModel.email!,
-                          style: TextStyle(
-                            fontSize: getProportionateScreenHeight(20),
+                  Container(
+                      height: setHeight(53),
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: getProportionateScreenHeight(10),
                           ),
-                        ),
-                        Text(
-                          "CNIC: " + workerModel.cnic!,
-                          style: TextStyle(
-                            fontSize: getProportionateScreenHeight(20),
+                          SizedBox(
+                            height: setHeight(20),
+                            width: setWidth(50),
+                            child: CachedNetworkImage(
+                                imageUrl: contractorModel.profileImageURL!),
                           ),
-                        ),
-                        Text(
-                          "Experience: " + workerModel.experience!,
-                          style: TextStyle(
-                            fontSize: getProportionateScreenHeight(20),
+                          Text(
+                            "Email: " + contractorModel.email!,
+                            style: TextStyle(
+                              fontSize: getProportionateScreenHeight(20),
+                            ),
                           ),
-                        ),
-                        Text(
-                          "Gender: " +
-                              (workerModel.gender! ? "Male" : "Female"),
-                          style: TextStyle(
-                            fontSize: getProportionateScreenHeight(20),
+                          Text(
+                            "CNIC: " + contractorModel.cnic!,
+                            style: TextStyle(
+                              fontSize: getProportionateScreenHeight(20),
+                            ),
                           ),
-                        ),
-                        Text(
-                          "Contact: " + workerModel.number!,
-                          style: TextStyle(
-                            fontSize: getProportionateScreenHeight(20),
+                          Text(
+                            "Experience: " + contractorModel.services!.first,
+                            style: TextStyle(
+                              fontSize: getProportionateScreenHeight(20),
+                            ),
                           ),
-                        ),
-                        Text(
-                          "Status: " + workerModel.status.toString(),
-                          style: TextStyle(
-                            fontSize: getProportionateScreenHeight(20),
+                          Text(
+                            "Gender: " +
+                                (contractorModel.gender! ? "Male" : "Female"),
+                            style: TextStyle(
+                              fontSize: getProportionateScreenHeight(20),
+                            ),
                           ),
-                        ),
-                        const Divider(
-                          thickness: 0.2,
-                          color: Colors.black,
-                          height: 0,
-                        ),
-                        Text(
-                          "Bio: ",
-                          style: TextStyle(
-                            fontSize: getProportionateScreenHeight(20),
+                          Text(
+                            "Contact: " + contractorModel.contactNumber!,
+                            style: TextStyle(
+                              fontSize: getProportionateScreenHeight(20),
+                            ),
                           ),
-                        ),
-                        const Divider(
-                          thickness: 0.2,
-                          color: Colors.black,
-                          height: 0,
-                        ),
-                      ],
-                    )),
-              ],
+                          Text(
+                            "Status: " + contractorModel.status.toString(),
+                            style: TextStyle(
+                              fontSize: getProportionateScreenHeight(20),
+                            ),
+                          ),
+                          const Divider(
+                            thickness: 0.2,
+                            color: Colors.black,
+                            height: 0,
+                          ),
+                          Text(
+                            "Bio: ",
+                            style: TextStyle(
+                              fontSize: getProportionateScreenHeight(20),
+                            ),
+                          ),
+                          const Divider(
+                            thickness: 0.2,
+                            color: Colors.black,
+                            height: 0,
+                          ),
+                          Spacer(),
+                          Center(
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  fixedSize: Size(
+                                      getProportionateScreenWidth(200),
+                                      getProportionateScreenHeight(50)),
+                                  side: const BorderSide(
+                                    width: 0,
+                                  ),
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30)),
+                                ),
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ProfileView(
+                                            userID: contractorModel.userID),
+                                      ));
+                                },
+                                child: const Text("Visit Profile")),
+                          )
+                        ],
+                      )),
+                ],
+              ),
             ),
           ),
         ),

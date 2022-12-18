@@ -47,24 +47,17 @@ class PostItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Divider(
-                height: 0,
-              ),
-              SizedBox(
+              Divider(
                 height: getProportionateScreenHeight(10),
               ),
               Text("$caption"),
-              SizedBox(
+              Divider(
                 height: getProportionateScreenHeight(10),
               ),
               Container(
                 color: const Color.fromARGB(255, 0, 0, 0),
-                height: setHeight(31),
+                height: setHeight(35),
                 width: setWidth(100),
-                // child: Image.network(
-                //   "$imageURL",
-                //   fit: BoxFit.fitWidth,
-                // ),
                 child: CachedNetworkImage(
                     imageUrl: imageURL!, fit: BoxFit.fitWidth),
               ),

@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../helper/size_configuration.dart';
 import '../../providers/current_user_provider.dart';
+import '../../providers/customer_provider.dart';
 import 'my_profile_fields.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -107,9 +108,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<CurrentUserProvider>(context);
-    final loggedInUser = userProvider
-        .getCurrentUser(FirebaseAuth.instance.currentUser!.uid.trim());
+    final userProvider = Provider.of<CustomerProvider>(context);
+    final loggedInUser =
+        userProvider.getUserByID(FirebaseAuth.instance.currentUser!.uid.trim());
     SizeConfig().init(context);
 
     return SafeArea(
@@ -289,9 +290,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       builder: ((context) =>
                           const Center(child: CircularProgressIndicator())),
                     );
-                    final userProvider = Provider.of<CurrentUserProvider>(
-                        context,
-                        listen: false);
+                    final userProvider =
+                        Provider.of<CustomerProvider>(context, listen: false);
                     await FirebaseFirestore.instance
                         .collection("users")
                         .doc("Y1DImckjzK5z2khAEi7o")
@@ -299,8 +299,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         .doc(FirebaseAuth.instance.currentUser!.uid.trim())
                         .update({"profileImageURL": _imagePath});
 
-                    await userProvider
-                        .fetch(FirebaseAuth.instance.currentUser!.uid.trim());
+                    await userProvider.fetch();
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },

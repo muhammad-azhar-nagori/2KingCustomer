@@ -1,59 +1,66 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:kingcustomer/Screens/Chat/opposite_messages.dart';
 import 'package:kingcustomer/helper/size_configuration.dart';
-import 'package:kingcustomer/models/aggrement_model.dart';
+import 'package:kingcustomer/models/agreement_model.dart';
 import 'package:kingcustomer/models/contractor_model.dart';
+import 'package:kingcustomer/models/customer_model.dart';
+import 'package:kingcustomer/providers/customer_provider.dart';
+import 'package:kingcustomer/widgets/mycontainer.dart';
 import 'package:provider/provider.dart';
-import '../../models/current_user.dart';
-import '../../providers/aggrement_provider.dart';
-import '../../providers/current_user_provider.dart';
+import '../../providers/agreement_provider.dart';
 
 import '../../providers/contractor_provider.dart';
 
-class AggrementMsg extends StatelessWidget {
-  const AggrementMsg({super.key, required this.text});
+class AgreementMsg extends StatelessWidget {
+  const AgreementMsg({super.key, required this.text});
   final String text;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 30.0),
-      child: Container(
-          padding: const EdgeInsets.all(10),
-          height: setHeight(70),
-          decoration: BoxDecoration(
-            color: Colors.amberAccent,
-            border: Border.all(),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(20),
-            ),
-          ),
-          child: SendAggrement(
-            aggrementID: text,
-          )),
+      padding: const EdgeInsets.only(right: 30.0),
+      child: GestureDetector(
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ReceiveAgreement(
+                agreementID: text,
+              ),
+            )),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            MyContainer(
+                color: Color.fromARGB(255, 157, 195, 220),
+                height: setHeight(10),
+                child: OppositeMessages(text: "Agreement")),
+          ],
+        ),
+      ),
     );
   }
 }
 
-class SendAggrement extends StatelessWidget {
-  const SendAggrement({super.key, required this.aggrementID});
-  final String aggrementID;
+class ReceiveAgreement extends StatelessWidget {
+  const ReceiveAgreement({super.key, required this.agreementID});
+  final String agreementID;
 
   @override
   Widget build(BuildContext context) {
-    AggrementProvider aggrementProvider =
-        Provider.of<AggrementProvider>(context);
-    AggrementModel aggrementModel =
-        aggrementProvider.getAggrementByID(aggrementID);
+    AgreementProvider agreementProvider =
+        Provider.of<AgreementProvider>(context);
+    AgreementModel agreementModel =
+        agreementProvider.getAgreementByID(agreementID);
 
-    ContractorsProvider userProvider =
+    CustomerProvider userProvider = Provider.of<CustomerProvider>(context);
+    CustomerModel customerModel =
+        userProvider.getUserByID(agreementModel.customerID!);
+
+    ContractorsProvider currentUserProvider =
         Provider.of<ContractorsProvider>(context);
-    ContractorsModel customerModel =
-        userProvider.getUserByID(aggrementModel.customerID!);
-
-    CurrentUserProvider currentUserProvider =
-        Provider.of<CurrentUserProvider>(context);
-    CurrentUserModel contractorModel = currentUserProvider.getCurrentUser(FirebaseAuth.instance.currentUser!.uid.trim());
+    ContractorsModel contractorModel =
+        currentUserProvider.getUserByID(agreementModel.contractorID!);
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(
@@ -63,7 +70,7 @@ class SendAggrement extends StatelessWidget {
                 fit: BoxFit.contain,
               ),
               title: const Text(
-                "Aggrement",
+                "Agreement",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: (kToolbarHeight / 100) * 40,
@@ -98,17 +105,20 @@ class SendAggrement extends StatelessWidget {
                           Text(
                             softWrap: true,
                             "Name: " + customerModel.name!,
-                            style: const TextStyle(color: Colors.black, fontSize: 16),
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 16),
                           ),
                           Text(
                             softWrap: true,
                             "ID: " + customerModel.userID!,
-                            style: const TextStyle(color: Colors.black, fontSize: 16),
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 16),
                           ),
                           Text(
                             softWrap: true,
                             "CNIC: " + customerModel.cnic!,
-                            style: const TextStyle(color: Colors.black, fontSize: 16),
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 16),
                           ),
                           const Divider(thickness: 0.4),
                           const Center(
@@ -122,25 +132,29 @@ class SendAggrement extends StatelessWidget {
                           Text(
                             softWrap: true,
                             "Name: " + contractorModel.name!,
-                            style: const TextStyle(color: Colors.black, fontSize: 16),
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 16),
                           ),
                           Text(
                             softWrap: true,
                             "ID: " + contractorModel.userID!,
-                            style: const TextStyle(color: Colors.black, fontSize: 16),
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 16),
                           ),
                           Text(
                             softWrap: true,
                             "CNIC: " + contractorModel.cnic!,
-                            style: const TextStyle(color: Colors.black, fontSize: 16),
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 16),
                           ),
                           const Divider(thickness: 0.4),
                           Text(
-                            "Start Date:" + aggrementModel.startDate.toString(),
-                            style: const TextStyle(color: Colors.black, fontSize: 16),
+                            "Start Date:" + agreementModel.startDate.toString(),
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 16),
                           ),
                           Text(
-                            "End Date: " + aggrementModel.startDate.toString(),
+                            "End Date: " + agreementModel.startDate.toString(),
                             style: const TextStyle(
                                 color: Colors.black, fontSize: 16),
                           ),
@@ -178,31 +192,24 @@ class SendAggrement extends StatelessWidget {
                             child: ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemCount: aggrementModel.services!.values
-                                  .toList()
-                                  .length,
+                              itemCount:
+                                  agreementModel.services!.toList().length,
                               itemBuilder: (context, int index) => Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    aggrementModel.services!.entries
-                                        .elementAt(index)
-                                        .value,
+                                    agreementModel.services!.elementAt(index),
                                     style: const TextStyle(
                                         color: Colors.black, fontSize: 11),
                                   ),
                                   Text(
-                                    aggrementModel.services!.entries
-                                        .elementAt(index)
-                                        .value,
+                                    agreementModel.services!.elementAt(index),
                                     style: const TextStyle(
                                         color: Colors.black, fontSize: 11),
                                   ),
                                   Text(
-                                    aggrementModel.services!.entries
-                                        .elementAt(index)
-                                        .value,
+                                    agreementModel.services!.elementAt(index),
                                     style: const TextStyle(
                                         color: Colors.black, fontSize: 11),
                                   ),
@@ -215,14 +222,14 @@ class SendAggrement extends StatelessWidget {
                             height: 50,
                             child: Center(
                               child: Text(
-                                "Aggrement details",
+                                "Agreement details",
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 16),
                               ),
                             ),
                           ),
                           Text(
-                            aggrementModel.details!,
+                            agreementModel.details!,
                             softWrap: true,
                           ),
                         ]),

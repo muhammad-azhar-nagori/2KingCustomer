@@ -4,7 +4,7 @@ import 'package:kingcustomer/Screens/newsfeed/Post/post.dart';
 import 'package:kingcustomer/components/profile_header.dart';
 import 'package:kingcustomer/helper/size_configuration.dart';
 import 'package:provider/provider.dart';
-import '../../providers/current_user_provider.dart';
+import '../../providers/customer_provider.dart';
 import '../../providers/post_provider.dart';
 
 class MyProfileView extends StatelessWidget {
@@ -12,9 +12,9 @@ class MyProfileView extends StatelessWidget {
   final String title;
   @override
   Widget build(BuildContext context) {
-    CurrentUserProvider userProvider =
-        Provider.of<CurrentUserProvider>(context);
-    final loggedInUser = userProvider.getCurrentUser(FirebaseAuth.instance.currentUser!.uid.trim());
+    CustomerProvider userProvider = Provider.of<CustomerProvider>(context);
+    final loggedInUser =
+        userProvider.getUserByID(FirebaseAuth.instance.currentUser!.uid.trim());
 
     final postProvider = Provider.of<PostProvider>(context);
     final postsList = postProvider.getPostByID(loggedInUser.userID!);
@@ -69,22 +69,22 @@ class MyProfileView extends StatelessWidget {
                   const Divider(
                     thickness: 1,
                   ),
-                  Container(
-                    padding: EdgeInsets.all(getProportionateScreenHeight(8)),
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: getProportionateScreenWidth(0),
-                          mainAxisSpacing: getProportionateScreenHeight(0),
-                          mainAxisExtent: getProportionateScreenHeight(20),
-                          childAspectRatio: 150 / 220),
-                      itemCount: loggedInUser.services!.length,
-                      itemBuilder: (context, index) =>
-                          Text(loggedInUser.services!.elementAt(index)),
-                    ),
-                  ),
+                  // Container(
+                  //   padding: EdgeInsets.all(getProportionateScreenHeight(8)),
+                  //   child: GridView.builder(
+                  //     shrinkWrap: true,
+                  //     physics: const NeverScrollableScrollPhysics(),
+                  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  //         crossAxisCount: 3,
+                  //         crossAxisSpacing: getProportionateScreenWidth(0),
+                  //         mainAxisSpacing: getProportionateScreenHeight(0),
+                  //         mainAxisExtent: getProportionateScreenHeight(20),
+                  //         childAspectRatio: 150 / 220),
+                  //     itemCount: loggedInUser.services!.length,
+                  //     itemBuilder: (context, index) =>
+                  //         Text(loggedInUser.services!.elementAt(index)),
+                  //   ),
+                  // ),
                   ListView.builder(
                     itemCount: postsList.length,
                     itemBuilder: (context, int index) =>

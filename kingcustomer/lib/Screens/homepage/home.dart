@@ -4,7 +4,8 @@ import 'package:kingcustomer/Screens/homepage/components/story/stories.dart';
 import 'package:kingcustomer/Screens/homepage/components/search_home.dart';
 import 'package:kingcustomer/helper/size_configuration.dart';
 import 'package:page_transition/page_transition.dart';
-import '../profile/edit_services.dart';
+import 'package:provider/provider.dart';
+import '../../providers/authentication_provider.dart';
 import 'components/construction_services.dart';
 
 class HomePage extends StatelessWidget {
@@ -16,9 +17,13 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: getProportionateScreenWidth(40),
-        leading: Image.asset(
-          "assets/images/logo-black-half.png",
-          fit: BoxFit.contain,
+        leading: GestureDetector(
+          onTap: () async =>
+              await context.read<AuthenticationService>().signOut(),
+          child: Image.asset(
+            "assets/images/logo-black-half.png",
+            fit: BoxFit.contain,
+          ),
         ),
         iconTheme: const IconThemeData(color: Colors.black),
         title: const Text(
@@ -89,15 +94,6 @@ class HomePage extends StatelessWidget {
                           style: Theme.of(context).textTheme.displaySmall,
                         ),
                         const Spacer(),
-                        IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const EditServices(),
-                                  ));
-                            },
-                            icon: const Icon(Icons.edit))
                       ],
                     ),
                     Divider(
@@ -120,15 +116,6 @@ class HomePage extends StatelessWidget {
                           style: Theme.of(context).textTheme.displaySmall,
                         ),
                         const Spacer(),
-                        IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const EditServices(),
-                                  ));
-                            },
-                            icon: const Icon(Icons.edit))
                       ],
                     ),
                     Divider(

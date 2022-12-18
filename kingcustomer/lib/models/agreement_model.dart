@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-class AggrementModel with ChangeNotifier {
-  final String? aggrementID;
+class AgreementModel with ChangeNotifier {
+  final String? agreementID;
   final String? contractorID;
   final String? customerID;
 
   final DateTime? startDate;
-  final Map<String, dynamic>? services;
+  final List? services;
   final DateTime? endDate;
 
   final String? details;
   final bool? status;
-  AggrementModel({
+  AgreementModel({
     this.details,
-    this.aggrementID,
+    this.agreementID,
     this.contractorID,
     this.customerID,
     this.startDate,
@@ -21,10 +21,10 @@ class AggrementModel with ChangeNotifier {
     this.endDate,
     this.status,
   });
-  factory AggrementModel.fromMap(
+  factory AgreementModel.fromMap(
       {required Map<String, dynamic> map, required String aggrementID}) {
-    return AggrementModel(
-      aggrementID: aggrementID,
+    return AgreementModel(
+      agreementID: aggrementID,
       contractorID: map["contractorID"],
       customerID: map["customerID"],
       services: map["services"],

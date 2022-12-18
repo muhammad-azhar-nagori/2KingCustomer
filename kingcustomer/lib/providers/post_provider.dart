@@ -26,7 +26,6 @@ class PostProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
   List<PostModel> getPostByID(String userID) {
     getList.sort(((a, b) => a.postedTime!.compareTo(b.postedTime!)));
     return getList.where((element) => element.userID == userID).toList();

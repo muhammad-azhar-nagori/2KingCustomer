@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:kingcustomer/Screens/newsfeed/Post/post_bottom.dart';
 import '../../../helper/size_configuration.dart';
-import 'comments.dart';
+import '../../../models/post_model.dart';
 import 'like.dart';
 
 class OpenPost extends StatelessWidget {
   const OpenPost({
     super.key,
     required this.imageURL,
+    required this.postModel,
     required this.caption,
   });
-
+  final PostModel postModel;
   final String? imageURL;
 
   final String? caption;
@@ -20,7 +22,7 @@ class OpenPost extends StatelessWidget {
         body: Stack(
           children: [
             Padding(
-                padding:const  EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Row(
                   children: [
                     CircleAvatar(foregroundImage: NetworkImage(imageURL!)),
@@ -29,7 +31,7 @@ class OpenPost extends StatelessWidget {
                     ),
                     Text(
                       caption!,
-                      style:const  TextStyle(
+                      style: const TextStyle(
                           color: Color.fromARGB(255, 0, 0, 0), fontSize: 18),
                     ),
                     const Spacer(),
@@ -43,7 +45,7 @@ class OpenPost extends StatelessWidget {
                   ],
                 )),
             Container(
-              color:const  Color.fromARGB(255, 0, 0, 0),
+              color: const Color.fromARGB(255, 0, 0, 0),
               height: setHeight(31),
               child: Image.network(
                 imageURL!,
@@ -56,13 +58,13 @@ class OpenPost extends StatelessWidget {
                   right: getProportionateScreenWidth(50),
                   bottom: getProportionateScreenHeight(10)),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   GestureDetector(
-                    child:const  Like(
+                    child: const Like(
                       isLiked: false,
                     ),
-                    onTap: () =>const  Like(
+                    onTap: () => const Like(
                       isLiked: true,
                     ),
                   ),
@@ -73,10 +75,7 @@ class OpenPost extends StatelessWidget {
                       color: Colors.black.withOpacity(0.2),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () =>const  Comments(isClicked: true),
-                    child:const  Comments(isClicked: false),
-                  ),
+                  PostBottom(postModel: postModel),
                 ],
               ),
             ),

@@ -50,7 +50,7 @@ class MessageProvider with ChangeNotifier {
     bool? type,
     String? chatWith,
     String? messagetxt,
-    String? aggrementID,
+    String? agreementID,
     DateTime? createdAt,
   }) async {
     DocumentReference<Map<String, dynamic>> doc = await FirebaseFirestore
@@ -63,7 +63,7 @@ class MessageProvider with ChangeNotifier {
       "type": type,
       "text": messagetxt,
       "createdAt": createdAt,
-      "aggrementID": aggrementID,
+      "agreementID": agreementID,
     });
     await FirebaseFirestore.instance
         .collection("chats")
@@ -74,7 +74,7 @@ class MessageProvider with ChangeNotifier {
       "type": type == true ? false : true,
       "text": messagetxt,
       "createdAt": createdAt,
-      "aggrementID": aggrementID,
+      "agreementID": agreementID,
     });
     _list.insert(
       0,
@@ -84,7 +84,7 @@ class MessageProvider with ChangeNotifier {
         messageID: doc.id,
         messageTxt: messagetxt,
         type: type,
-        aggrementID: aggrementID,
+        agreementID: agreementID,
       ),
     );
     notifyListeners();

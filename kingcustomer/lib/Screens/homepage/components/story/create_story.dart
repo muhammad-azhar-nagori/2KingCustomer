@@ -9,7 +9,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../helper/size_configuration.dart';
+import '../../../../models/customer_model.dart';
 import '../../../../providers/current_user_provider.dart';
+import '../../../../providers/customer_provider.dart';
 import '../../../../providers/story_provider.dart';
 
 class CreateStory extends StatefulWidget {
@@ -45,10 +47,10 @@ class _CreateStoryState extends State<CreateStory> {
   uploadStory() async {
     try {
       if (_imagePath.isNotEmpty) {
-        CurrentUserProvider userProvider =
-            Provider.of<CurrentUserProvider>(context, listen: false);
-        CurrentUserModel loggedInUser = userProvider
-            .getCurrentUser(FirebaseAuth.instance.currentUser!.uid.trim());
+        CustomerProvider userProvider =
+            Provider.of<CustomerProvider>(context, listen: false);
+        CustomerModel loggedInUser = userProvider
+            .getUserByID(FirebaseAuth.instance.currentUser!.uid.trim());
         final storyProvider =
             Provider.of<StoryProvider>(context, listen: false);
         showDialog(
@@ -75,19 +77,18 @@ class _CreateStoryState extends State<CreateStory> {
       // Future.delayed(const Duration(milliseconds: 0)).then((value) async {
       //   await postProvider.fetch();
       // });
-    // ignore: empty_catches
+      // ignore: empty_catches
     } on FirebaseException catch (e) {
-    // ignore: empty_catches
-    } catch (e) {
-    }
+      // ignore: empty_catches
+    } catch (e) {}
   }
 
   @override
   Widget build(BuildContext context) {
-    CurrentUserProvider userProvider =
-        Provider.of<CurrentUserProvider>(context, listen: false);
-    CurrentUserModel loggedInUser = userProvider
-        .getCurrentUser(FirebaseAuth.instance.currentUser!.uid.trim());
+    CustomerProvider userProvider =
+        Provider.of<CustomerProvider>(context, listen: false);
+    CustomerModel loggedInUser =
+        userProvider.getUserByID(FirebaseAuth.instance.currentUser!.uid.trim());
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,

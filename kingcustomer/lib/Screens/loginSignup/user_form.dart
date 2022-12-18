@@ -6,12 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kingcustomer/Screens/loginSignup/verify_email.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kingcustomer/providers/customer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:kingcustomer/Screens/loginSignup/mytextfield.dart';
-import 'package:kingcustomer/providers/contractor_provider.dart';
-
 import '../../helper/size_configuration.dart';
-import '../../providers/aggrement_provider.dart';
+import '../../providers/agreement_provider.dart';
 import '../../providers/authentication_provider.dart';
 import '../../providers/chat_provider.dart';
 import '../../providers/current_user_provider.dart';
@@ -61,21 +60,6 @@ class _UserFormState extends State<UserForm> {
   }
 
   loadcurrentUser() async {
-    try {
-      final currentUserProvider =
-          Provider.of<CurrentUserProvider>(context, listen: false);
-      currentUserProvider.fetch(FirebaseAuth.instance.currentUser!.uid.trim());
-    } catch (e) {
-      print(e);
-    }
-    try {
-      final workersProvider =
-          Provider.of<WorkerProvider>(context, listen: false);
-      workersProvider.fetch();
-    } catch (e) {
-      print(e);
-    }
-
     final ordersProvider = Provider.of<OrdersProvider>(context, listen: false);
     await ordersProvider.fetch();
     try {
@@ -95,7 +79,7 @@ class _UserFormState extends State<UserForm> {
     }
     try {
       final aggrementProvider =
-          Provider.of<AggrementProvider>(context, listen: false);
+          Provider.of<AgreementProvider>(context, listen: false);
 
       aggrementProvider.fetch();
     } catch (e) {
@@ -125,25 +109,24 @@ class _UserFormState extends State<UserForm> {
       bool? gender,
       String? name,
       String? userID}) async {
-    final userProvider =
-        Provider.of<ContractorsProvider>(context, listen: false);
+    final userProvider = Provider.of<CustomerProvider>(context, listen: false);
 
     try {
       DateTime date = DateTime.now();
       String imageURL = await userProvider.uploadUserImageToStorage(
           imagePath: _imagePath, userID: userID);
       userProvider.uploadUserDataToFireStore(
-          userID: userID,
-          cnic: cnic,
-          contactNumber: contactNumber,
-          email: email,
-          gender: gender,
-          name: name,
-          status: true,
-          createdDate: date,
-          profileImageURL: imageURL,
-          rating: [],
-          services: []);
+        userID: userID,
+        cnic: cnic,
+        contactNumber: contactNumber,
+        email: email,
+        gender: gender,
+        name: name,
+        status: true,
+        createdDate: date,
+        profileImageURL: imageURL,
+      );
+      userProvider.fetch();
     } on FirebaseException catch (e) {
       print(e.message);
       print(e.code);

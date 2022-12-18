@@ -8,37 +8,25 @@ class OpenComments extends StatelessWidget {
   TextEditingController commentController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: kToolbarHeight,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(
+            height: setHeight(51.5),
+            child: ListView(
+              shrinkWrap: true,
             ),
-            Container(
-              color: Colors.amber,
-              height: setHeight(88),
-              child: ListView(
-                shrinkWrap: true,
+          ),
+          MyTextField(
+              width: setWidth(
+                99,
               ),
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              height: setHeight(7.5),
-              child: MyTextField(
-                  width: setWidth(
-                    99,
-                  ),
-                  hintText: "Comment your view",
-                  leading:const  Icon(Icons.send_sharp),
-                  radius: getProportionateScreenWidth(20),
-                  controller: commentController),
-            ),
-          ],
-        ),
-      )),
+              hintText: "Comment your view",
+              leading: const Icon(Icons.send_sharp),
+              radius: 20,
+              controller: commentController),
+        ],
+      ),
     );
   }
 }

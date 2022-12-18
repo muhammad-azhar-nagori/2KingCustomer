@@ -8,6 +8,7 @@ import 'package:kingcustomer/providers/post_provider.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import '../../helper/size_configuration.dart';
+import '../../providers/customer_provider.dart';
 
 class Newsfeed extends StatefulWidget {
   const Newsfeed({Key? key}) : super(key: key);
@@ -18,14 +19,14 @@ class Newsfeed extends StatefulWidget {
 
 class _NewsfeedState extends State<Newsfeed> {
   final ScrollController _scrollController = ScrollController();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-        GlobalKey<RefreshIndicatorState>();
-
-    final userProvider = Provider.of<CurrentUserProvider>(context);
-    final loggedInUser = userProvider.getCurrentUser(FirebaseAuth.instance.currentUser!.uid.trim());
+    final userProvider = Provider.of<CustomerProvider>(context);
+    final loggedInUser =
+        userProvider.getUserByID(FirebaseAuth.instance.currentUser!.uid.trim());
     final postProvider = Provider.of<PostProvider>(context);
     final postsList = postProvider.getList;
     Future<void> _onRefresh() async {
@@ -55,46 +56,46 @@ class _NewsfeedState extends State<Newsfeed> {
         centerTitle: true,
         elevation: 1,
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        bottom: PreferredSize(
-          preferredSize: Size(setWidth(100), setHeight(7)),
-          child: ListTile(
-            leading: CircleAvatar(
-              child: ClipOval(
-                child: CachedNetworkImage(
-                  imageUrl: loggedInUser.profileImageURL!,
-                  fit: BoxFit.fill,
-                  height: getProportionateScreenHeight(80),
-                  width: getProportionateScreenWidth(80),
-                ),
-              ),
-            ),
-            title: InkWell(
-              onTap: () => Navigator.push(
-                context,
-                PageTransition(
-                    type: PageTransitionType.bottomToTop,
-                    child: const CreatePost(),
-                    duration: const Duration(milliseconds: 300),
-                    inheritTheme: true,
-                    ctx: context),
-              ),
-              child: Container(
-                height: getProportionateScreenHeight(40),
-                child: const Padding(
-                  padding: EdgeInsets.all(12),
-                  child: Text("Share your skills.."),
-                ),
-                decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  border: Border.all(),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(20),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        // bottom: PreferredSize(
+        //   preferredSize: Size(setWidth(100), setHeight(7)),
+        //   child: ListTile(
+        //     leading: CircleAvatar(
+        //       child: ClipOval(
+        //         child: CachedNetworkImage(
+        //           imageUrl: loggedInUser.profileImageURL!,
+        //           fit: BoxFit.fill,
+        //           height: getProportionateScreenHeight(80),
+        //           width: getProportionateScreenWidth(80),
+        //         ),
+        //       ),
+        //     ),
+        //     title: InkWell(
+        //       onTap: () => Navigator.push(
+        //         context,
+        //         PageTransition(
+        //             type: PageTransitionType.bottomToTop,
+        //             child: const CreatePost(),
+        //             duration: const Duration(milliseconds: 300),
+        //             inheritTheme: true,
+        //             ctx: context),
+        //       ),
+        //       child: Container(
+        //         height: getProportionateScreenHeight(40),
+        //         child: const Padding(
+        //           padding: EdgeInsets.all(12),
+        //           child: Text("Share your skills.."),
+        //         ),
+        //         decoration: BoxDecoration(
+        //           shape: BoxShape.rectangle,
+        //           border: Border.all(),
+        //           borderRadius: const BorderRadius.all(
+        //             Radius.circular(20),
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ),
       body: RefreshIndicator(
         key: _refreshIndicatorKey,

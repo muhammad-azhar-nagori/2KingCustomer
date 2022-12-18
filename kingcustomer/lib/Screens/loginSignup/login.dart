@@ -7,8 +7,9 @@ import 'package:kingcustomer/Screens/Dashboard/dashboard.dart';
 import 'package:kingcustomer/Screens/loginSignup/signup.dart';
 import 'package:kingcustomer/Screens/loginSignup/verify_email.dart';
 import 'package:kingcustomer/helper/size_configuration.dart';
+import 'package:kingcustomer/providers/customer_provider.dart';
 import 'package:provider/provider.dart';
-import '../../providers/aggrement_provider.dart';
+import '../../providers/agreement_provider.dart';
 import '../../providers/authentication_provider.dart';
 import '../../providers/chat_provider.dart';
 import '../../providers/current_user_provider.dart';
@@ -41,7 +42,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<ContractorsProvider>(context);
+    final userProvider = Provider.of<CustomerProvider>(context);
     userProvider.fetch();
     SizeConfig().init(context);
     return GestureDetector(
@@ -120,13 +121,14 @@ class _LoginState extends State<Login> {
                     bool isAvailable = false;
 
                     for (var item in userProvider.getList) {
+                      print(item.email);
                       if (item.email == emailController.text.trim()) {
                         isAvailable = true;
                       }
                     }
                     if (isAvailable == true) {
                       showDialog(
-                          barrierDismissible: true,
+                          barrierDismissible: false,
                           context: context,
                           builder: (context) =>
                               const Center(child: CircularProgressIndicator()));
@@ -138,15 +140,6 @@ class _LoginState extends State<Login> {
                       if (isSignedin == "signed in") {
                         await FirebaseAuth.instance.currentUser!.reload();
                         if (FirebaseAuth.instance.currentUser!.emailVerified) {
-                          try {
-                            final currentUserProvider =
-                                Provider.of<CurrentUserProvider>(context,
-                                    listen: false);
-                            await currentUserProvider.fetch(
-                                FirebaseAuth.instance.currentUser!.uid.trim());
-                          } catch (e) {
-                            print(e);
-                          }
                           try {
                             final workersProvider = Provider.of<WorkerProvider>(
                                 context,
@@ -180,7 +173,7 @@ class _LoginState extends State<Login> {
                           }
                           try {
                             final aggrementProvider =
-                                Provider.of<AggrementProvider>(context,
+                                Provider.of<AgreementProvider>(context,
                                     listen: false);
 
                             await aggrementProvider.fetch();

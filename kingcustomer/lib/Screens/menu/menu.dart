@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../helper/size_configuration.dart';
 import '../../providers/chat_provider.dart';
 import '../../providers/current_user_provider.dart';
+import '../../providers/customer_provider.dart';
 import '../../providers/order_provider.dart';
 import '../../providers/service_provider.dart';
 import '../../providers/contractor_provider.dart';
@@ -23,14 +24,14 @@ class Menu extends StatelessWidget {
   Widget build(BuildContext context) {
     final serviceProvider = Provider.of<ServiceProvider>(context);
     final chatProvider = Provider.of<ChatProvider>(context);
-    final currentProvider = Provider.of<CurrentUserProvider>(context);
+    final currentProvider = Provider.of<CustomerProvider>(context);
 
     final userProvider = Provider.of<ContractorsProvider>(context);
     final orderstProvider = Provider.of<OrdersProvider>(context);
     final messageProvider = Provider.of<MessageProvider>(context);
-    final workerProvider = Provider.of<WorkerProvider>(context);
 
-    final loggedInUser = currentProvider.getCurrentUser(FirebaseAuth.instance.currentUser!.uid.trim());
+    final loggedInUser = currentProvider
+        .getUserByID(FirebaseAuth.instance.currentUser!.uid.trim());
     return Scaffold(
       appBar: AppBar(
         leadingWidth: getProportionateScreenWidth(40),
@@ -116,26 +117,26 @@ class Menu extends StatelessWidget {
             color: Colors.black,
             height: 0,
           ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: 4),
-            dense: true,
-            leading: const CircleAvatar(
-              child: Icon(Icons.construction),
-            ),
-            title: const Text(
-              "Edit Services",
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const EditServices(),
-                  ));
-            },
-          ),
+          // ListTile(
+          //   visualDensity: const VisualDensity(vertical: 4),
+          //   dense: true,
+          //   leading: const CircleAvatar(
+          //     child: Icon(Icons.construction),
+          //   ),
+          //   title: const Text(
+          //     "Edit Services",
+          //     style: TextStyle(
+          //       fontSize: 18,
+          //     ),
+          //   ),
+          //   onTap: () {
+          //     Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (context) => const EditServices(),
+          //         ));
+          //   },
+          // ),
           const Divider(
             thickness: 0.05,
             indent: 0,
@@ -169,7 +170,6 @@ class Menu extends StatelessWidget {
               serviceProvider.clearList();
               currentProvider.clearList();
               orderstProvider.clearList();
-              workerProvider.clearList();
               userProvider.clearList();
               Navigator.pushReplacement(
                 context,

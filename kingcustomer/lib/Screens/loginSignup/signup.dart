@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:kingcustomer/Screens/loginSignup/login.dart';
 import 'package:kingcustomer/Screens/loginSignup/user_form.dart';
 import 'package:kingcustomer/helper/size_configuration.dart';
+import 'package:kingcustomer/providers/customer_provider.dart';
 import 'package:provider/provider.dart';
-import '../../providers/contractor_provider.dart';
 import 'mytextfield.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -35,7 +35,7 @@ class _SignupState extends State<Signup> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<ContractorsProvider>(context);
+    final userProvider = Provider.of<CustomerProvider>(context);
     userProvider.fetch();
     SizeConfig().init(context);
     return GestureDetector(

@@ -7,8 +7,8 @@ import 'package:kingcustomer/providers/contractor_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../helper/size_configuration.dart';
-import '../../models/aggrement_model.dart';
-import '../../providers/aggrement_provider.dart';
+import '../../models/agreement_model.dart';
+import '../../providers/agreement_provider.dart';
 import '../../providers/order_provider.dart';
 import 'order_details.dart';
 
@@ -62,10 +62,10 @@ class ActiveOrderTile extends StatelessWidget {
   final OrdersModel ordersModel;
   @override
   Widget build(BuildContext context) {
-    AggrementProvider aggrementProvider =
-        Provider.of<AggrementProvider>(context);
-    AggrementModel aggrementModel =
-        aggrementProvider.getAggrementByID(ordersModel.aggrementID!);
+    AgreementProvider aggrementProvider =
+        Provider.of<AgreementProvider>(context);
+    AgreementModel aggrementModel =
+        aggrementProvider.getAgreementByID(ordersModel.aggrementID!);
     ContractorsProvider userProvider =
         Provider.of<ContractorsProvider>(context);
     ContractorsModel customerModel =

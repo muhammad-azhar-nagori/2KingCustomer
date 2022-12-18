@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class CustomerModel with ChangeNotifier {
   final String? userID;
   final String? email;
-  final String? password;
   final bool? status;
   final String? profileImageURL;
   final bool? gender;
@@ -18,7 +17,6 @@ class CustomerModel with ChangeNotifier {
     this.userID,
     this.name,
     this.email,
-    this.password,
     this.profileImageURL,
     this.gender,
     this.contactNumber,
@@ -30,12 +28,11 @@ class CustomerModel with ChangeNotifier {
       cnic: map["cnic"],
       name: map["name"],
       email: map["email"],
-      profileImageURL: map["profileImageURL"],
+      profileImageURL: map["profileImgUrl"],
       gender: map["gender"],
-      contactNumber: map["contactNumber"],
-      password: map["password"],
+      contactNumber: map["contact"],
       status: map["status"],
-      createdDate: map["createdDate"].toDate(),
+      createdDate: map["createdAt"].toDate(),
     );
   }
 }
