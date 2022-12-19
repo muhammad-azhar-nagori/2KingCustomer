@@ -14,12 +14,12 @@ class InventoryProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchInventory() async {
+  Future<void> fetchInventory(String logsID) async {
     await FirebaseFirestore.instance
         .collection("orders")
         .doc(" " + loggedInUser!.uid)
         .collection("logs")
-        .doc("M4XynyYl03rreQUdtwg6")
+        .doc(logsID)
         .collection("inventory")
         .get()
         .then(
@@ -42,28 +42,32 @@ class InventoryProvider with ChangeNotifier {
     String? qty,
     String? total,
     String? perItem,
+    String? logsID,
   }) async {
     DocumentReference<Map<String, dynamic>> doc = await FirebaseFirestore
         .instance
         .collection("orders")
         .doc(" " + loggedInUser!.uid)
         .collection("logs")
-        .doc("M4XynyYl03rreQUdtwg6")
+        .doc(logsID)
         .collection("inventory")
         .add({
       "itemName": itemName,
       "qty": qty,
       "total": total,
       "perItem": perItem,
+      "logs": logsID
     });
     _list.insert(
       0,
       InventoryModel(
-          inventoryID: doc.id,
-          itemName: itemName,
-          perItem: perItem,
-          qty: qty,
-          total: total),
+        inventoryID: doc.id,
+        itemName: itemName,
+        perItem: perItem,
+        qty: qty,
+        total: total,
+        logsID: logsID,
+      ),
     );
     notifyListeners();
   }

@@ -81,12 +81,13 @@ class _FlashScreenState extends State<FlashScreen> {
         await aggrementProvider.fetch();
       } catch (e) {}
       try {
-        final serviceLogProvider =
-            Provider.of<ServiceLogsProvider>(context, listen: false);
-        await serviceLogProvider.fetchServiceLog();
-        final inventoryProvider =
-            Provider.of<InventoryProvider>(context, listen: false);
-        await inventoryProvider.fetchInventory();
+        final ordersProvider =
+            Provider.of<OrdersProvider>(context, listen: false);
+        ordersProvider.fetch();
+
+        Provider.of<ServiceLogsProvider>(context, listen: false);
+
+        Provider.of<InventoryProvider>(context, listen: false);
       } catch (e) {}
       Navigator.pushReplacement(
           context,

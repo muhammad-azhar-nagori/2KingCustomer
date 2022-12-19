@@ -36,9 +36,40 @@ class OrdersProvider with ChangeNotifier {
     }
   }
 
-  List<OrdersModel> getOrderByID(String aggrementID) {
-    return _list
-        .where((element) => element.aggrementID!.trim() == aggrementID.trim())
-        .toList();
+  Future<void> uploadData({
+    String? aggrementID,
+    String? serviceTotal,
+    String? inventoryTotal,
+    String? grandTotal,
+    String? status,
+    String? logsID,
+  }) async {
+    await FirebaseFirestore.instance
+        .collection("orders")
+        .doc(" " + loggedInUser!.uid)
+        .collection("orderDetails")
+        .add({
+      "aggrementID": aggrementID,
+      "serviceTotal": serviceTotal,
+      "inventoryTotal": inventoryTotal,
+      "grandTotal": grandTotal,
+      "logsID": logsID,
+      "status": status,
+    });
+    _list.insert(
+        0,
+        OrdersModel(
+            aggrementID: aggrementID,
+            grandTotal: grandTotal,
+            inventoryTotal: inventoryTotal,
+            logsID: logsID,
+            serviceTotal: serviceTotal,
+            status: status));
+    notifyListeners();
+  }
+
+  OrdersModel getOrderByID(String aggrementID) {
+    return _list.firstWhere(
+        (element) => element.aggrementID!.trim() == aggrementID.trim());
   }
 }

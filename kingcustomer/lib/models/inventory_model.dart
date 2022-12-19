@@ -6,7 +6,10 @@ class InventoryModel with ChangeNotifier {
   final String? perItem;
   final String? qty;
   final String? total;
+  
+  final String? logsID;
   InventoryModel({
+    this.logsID,
     this.inventoryID,
     this.itemName,
     this.perItem,
@@ -22,6 +25,7 @@ class InventoryModel with ChangeNotifier {
       perItem: map["perItem"],
       qty: map["qty"],
       total: map["total"],
+      logsID: map["logsID"]
     );
   }
 }

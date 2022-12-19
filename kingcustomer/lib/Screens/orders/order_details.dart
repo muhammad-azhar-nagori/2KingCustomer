@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kingcustomer/Screens/Chat/aggrement_message.dart';
 import 'package:kingcustomer/Screens/orders/Logs/view_aggrement.dart';
 import 'package:kingcustomer/Screens/orders/Logs/logs.dart';
 import 'package:kingcustomer/components/profile_header.dart';
@@ -10,7 +11,7 @@ import '../../helper/size_configuration.dart';
 Future<dynamic> orderDetails(
     BuildContext context,
     AgreementModel aggrementModel,
-    ContractorsModel customerModel,
+    ContractorsModel contractorModel,
     OrdersModel ordersModel) {
   return showModalBottomSheet(
     context: context,
@@ -57,11 +58,11 @@ Future<dynamic> orderDetails(
                 color: Colors.greenAccent,
                 height: setHeight(10),
                 child: ProfileHeader(
-                    title: customerModel.name!,
-                    imageURL: customerModel.profileImageURL!,
-                    email: customerModel.email!,
-                    phoneNumber: customerModel.contactNumber!,
-                    rating: customerModel.rating!),
+                    title: contractorModel.name!,
+                    imageURL: contractorModel.profileImageURL!,
+                    email: contractorModel.email!,
+                    phoneNumber: contractorModel.contactNumber!,
+                    rating: contractorModel.rating!),
               ),
               Container(
                   height: setHeight(30),
@@ -161,7 +162,7 @@ Future<dynamic> orderDetails(
                             context,
                             MaterialPageRoute(
                               builder: (context) => Logs(
-                                title: customerModel.name!,
+                                title: contractorModel.name!,
                                 ordersModel: ordersModel,
                               ),
                             ),
@@ -190,7 +191,9 @@ Future<dynamic> orderDetails(
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ViewAggrement(),
+                              builder: (context) => ReceiveAgreement(
+                                agreementID: aggrementModel.agreementID!,
+                              ),
                             ),
                           );
                         },

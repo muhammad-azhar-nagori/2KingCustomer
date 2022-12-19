@@ -8,8 +8,6 @@ import 'package:kingcustomer/providers/message_provider.dart';
 import 'package:provider/provider.dart';
 import '../../helper/size_configuration.dart';
 import '../../providers/chat_provider.dart';
-import '../../providers/current_user_provider.dart';
-import '../../providers/customer_provider.dart';
 import '../../widgets/are_you_sure.dart';
 import 'my_messages.dart';
 import 'opposite_messages.dart';

@@ -38,6 +38,33 @@ class AgreementProvider with ChangeNotifier {
     }
   }
 
+  updateStatus(String agreementID, bool status, String contractorID) async {
+    await FirebaseFirestore.instance
+        .collection("chats")
+        .doc(loggedInUser!.uid)
+        .collection("agreements")
+        .doc(agreementID)
+        .update({"status": status});
+    await FirebaseFirestore.instance
+        .collection("chats")
+        .doc(contractorID)
+        .collection("agreements")
+        .doc(agreementID)
+        .update({"status": status});
+    fetch();
+    notifyListeners();
+  }
+
+  deleteAgreement(String agreementID) async {
+    await FirebaseFirestore.instance
+        .collection("chats")
+        .doc(loggedInUser!.uid)
+        .collection("agreements")
+        .doc(agreementID)
+        .delete();
+    notifyListeners();
+  }
+
   AgreementModel getAgreementByID(String agreementID) {
     return _list
         .where((element) => element.agreementID!.trim() == agreementID.trim())

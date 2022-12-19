@@ -13,12 +13,12 @@ class ServiceLogsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchServiceLog() async {
+  Future<void> fetchServiceLog(String logsID) async {
     await FirebaseFirestore.instance
         .collection("orders")
         .doc(" " + loggedInUser!.uid)
         .collection("logs")
-        .doc("M4XynyYl03rreQUdtwg6")
+        .doc(logsID)
         .collection("services")
         .get()
         .then(
@@ -36,24 +36,25 @@ class ServiceLogsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> uploadItemDataToFireStore({
-    String? serviceName,
-    String? noOfDays,
-    String? total,
-    String? perDay,
-  }) async {
+  Future<void> uploadItemDataToFireStore(
+      {String? serviceName,
+      String? noOfDays,
+      String? total,
+      String? perDay,
+      String? logsID}) async {
     DocumentReference<Map<String, dynamic>> doc = await FirebaseFirestore
         .instance
         .collection("orders")
         .doc(" " + loggedInUser!.uid)
         .collection("logs")
-        .doc("M4XynyYl03rreQUdtwg6")
+        .doc(logsID)
         .collection("services")
         .add({
       "serviceName": serviceName,
       "noOfDays": noOfDays,
       "total": total,
       "perDay": perDay,
+      "logsID": logsID
     });
     _servicelist.insert(
       0,
@@ -62,14 +63,20 @@ class ServiceLogsProvider with ChangeNotifier {
           serviceName: serviceName,
           perDay: perDay,
           noOfDays: noOfDays,
-          total: total),
+          total: total,
+          logsID: logsID),
     );
     notifyListeners();
   }
 
-  List<ServiceLogModel> getserviceByID(String serviceLogID) {
+  List<ServiceLogModel> getserviceByServiceID(String serviceLogID) {
     return _servicelist
         .where((element) => element.serviceID!.trim() == serviceLogID.trim())
         .toList();
+  }
+
+  ServiceLogModel getserviceBylogsID(String logsID) {
+    return _servicelist
+        .firstWhere((element) => element.logsID!.trim() == logsID.trim());
   }
 }

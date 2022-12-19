@@ -1,12 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:kingcustomer/Screens/Chat/opposite_messages.dart';
 import 'package:kingcustomer/helper/size_configuration.dart';
 import 'package:kingcustomer/models/agreement_model.dart';
 import 'package:kingcustomer/models/contractor_model.dart';
 import 'package:kingcustomer/models/customer_model.dart';
 import 'package:kingcustomer/providers/customer_provider.dart';
-import 'package:kingcustomer/widgets/mycontainer.dart';
+import 'package:kingcustomer/providers/inventory_provider.dart';
+import 'package:kingcustomer/providers/order_provider.dart';
+import 'package:kingcustomer/providers/service_log_provider.dart';
 import 'package:provider/provider.dart';
 import '../../providers/agreement_provider.dart';
 
@@ -18,24 +19,46 @@ class AgreementMsg extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AgreementProvider agreementProvider =
+        Provider.of<AgreementProvider>(context);
+    AgreementModel agreementModel = agreementProvider.getAgreementByID(text);
+    bool agreementStatus = agreementModel.status!;
     return Padding(
-      padding: const EdgeInsets.only(right: 30.0),
+      padding: const EdgeInsets.only(right: 100.0),
       child: GestureDetector(
         onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ReceiveAgreement(
+                builder: (context) => ReceiveAgreement(agreementID: text))),
+        child: SizedBox(
+          height: setHeight(30),
+          width: setWidth(100),
+          child: Scaffold(
+            body: Container(
+              padding: const EdgeInsets.all(10),
+              height: setHeight(30),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 123, 178, 214),
+                border: Border.all(),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              child: ReceiveAgreement(
                 agreementID: text,
               ),
-            )),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            MyContainer(
-                color: Color.fromARGB(255, 157, 195, 220),
-                height: setHeight(10),
-                child: OppositeMessages(text: "Agreement")),
-          ],
+            ),
+            bottomSheet: Container(
+              height: setHeight(5),
+              color: const Color.fromARGB(255, 123, 178, 214),
+              child: Center(
+                  child: Text(
+                !agreementStatus ? "View" : "Accepted",
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              )),
+            ),
+          ),
         ),
       ),
     );
@@ -52,7 +75,11 @@ class ReceiveAgreement extends StatelessWidget {
         Provider.of<AgreementProvider>(context);
     AgreementModel agreementModel =
         agreementProvider.getAgreementByID(agreementID);
-
+    OrdersProvider ordersProvider = Provider.of<OrdersProvider>(context);
+    ServiceLogsProvider servicelogsProvider =
+        Provider.of<ServiceLogsProvider>(context);
+    InventoryProvider inventoryProvider =
+        Provider.of<InventoryProvider>(context);
     CustomerProvider userProvider = Provider.of<CustomerProvider>(context);
     CustomerModel customerModel =
         userProvider.getUserByID(agreementModel.customerID!);
@@ -231,6 +258,88 @@ class ReceiveAgreement extends StatelessWidget {
                           Text(
                             agreementModel.details!,
                             softWrap: true,
+                          ),
+                          Visibility(
+                            visible: !agreementModel.status!,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                      const Color.fromARGB(255, 18, 18, 18),
+                                    ),
+                                    fixedSize: MaterialStateProperty.all(
+                                      Size(setWidth(30), setHeight(6)),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Decline",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color:
+                                            Color.fromARGB(255, 255, 210, 32),
+                                      )),
+                                ),
+                                ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                      const Color.fromARGB(255, 255, 210, 32),
+                                    ),
+                                    fixedSize: MaterialStateProperty.all(
+                                      Size(setWidth(30), setHeight(6)),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: ((context) => const Center(
+                                          child: CircularProgressIndicator())),
+                                    );
+                                    await agreementProvider.updateStatus(
+                                        agreementID,
+                                        true,
+                                        contractorModel.userID!);
+                                    final doc = await FirebaseFirestore.instance
+                                        .collection("orders")
+                                        .doc(" " + customerModel.userID!)
+                                        .collection("logs")
+                                        .add({});
+                                    await inventoryProvider
+                                        .uploadItemDataToFireStore(
+                                            itemName: "",
+                                            perItem: "",
+                                            qty: "",
+                                            total: "",
+                                            logsID: doc.id);
+                                    await servicelogsProvider
+                                        .uploadItemDataToFireStore(
+                                            noOfDays: "",
+                                            perDay: "",
+                                            serviceName: "",
+                                            total: "",
+                                            logsID: doc.id);
+                                    await ordersProvider.uploadData(
+                                        aggrementID: agreementID,
+                                        grandTotal: "",
+                                        inventoryTotal: "",
+                                        logsID: doc.id,
+                                        serviceTotal: "",
+                                        status: "Pending");
+                                    await inventoryProvider
+                                        .fetchInventory(doc.id);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Accept",
+                                      style: TextStyle(
+                                          fontSize: 18, color: Colors.black87)),
+                                ),
+                              ],
+                            ),
                           ),
                         ]),
                   ),
