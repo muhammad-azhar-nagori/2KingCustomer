@@ -201,10 +201,9 @@ Future<dynamic> orderDetails(
                           "View Aggrement",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: getProportionateScreenHeight(18),
-                            fontWeight: FontWeight.bold,
-                          ),
+                              color: Colors.black87,
+                              fontSize: getProportionateScreenHeight(18),
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
