@@ -17,7 +17,7 @@ class OrdersProvider with ChangeNotifier {
     if (loggedInUser != null) {
       await FirebaseFirestore.instance
           .collection("orders")
-          .doc(" " + loggedInUser!.uid)
+          .doc(loggedInUser!.uid)
           .collection("orderDetails")
           .get()
           .then(
@@ -36,17 +36,29 @@ class OrdersProvider with ChangeNotifier {
     }
   }
 
-  Future<void> uploadData({
-    String? aggrementID,
-    String? serviceTotal,
-    String? inventoryTotal,
-    String? grandTotal,
-    String? status,
-    String? logsID,
-  }) async {
+  Future<void> uploadData(
+      {String? aggrementID,
+      String? serviceTotal,
+      String? inventoryTotal,
+      String? grandTotal,
+      String? status,
+      String? logsID,
+      required String contractorID}) async {
     await FirebaseFirestore.instance
         .collection("orders")
-        .doc(" " + loggedInUser!.uid)
+        .doc(loggedInUser!.uid)
+        .collection("orderDetails")
+        .add({
+      "aggrementID": aggrementID,
+      "serviceTotal": serviceTotal,
+      "inventoryTotal": inventoryTotal,
+      "grandTotal": grandTotal,
+      "logsID": logsID,
+      "status": status,
+    });
+    await FirebaseFirestore.instance
+        .collection("orders")
+        .doc(contractorID)
         .collection("orderDetails")
         .add({
       "aggrementID": aggrementID,

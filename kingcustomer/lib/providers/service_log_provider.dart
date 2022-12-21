@@ -16,7 +16,7 @@ class ServiceLogsProvider with ChangeNotifier {
   Future<void> fetchServiceLog(String logsID) async {
     await FirebaseFirestore.instance
         .collection("orders")
-        .doc(" " + loggedInUser!.uid)
+        .doc(loggedInUser!.uid)
         .collection("logs")
         .doc(logsID)
         .collection("services")
@@ -33,19 +33,22 @@ class ServiceLogsProvider with ChangeNotifier {
               },
           },
         );
+    _servicelist.removeLast();
     notifyListeners();
   }
 
-  Future<void> uploadItemDataToFireStore(
-      {String? serviceName,
-      String? noOfDays,
-      String? total,
-      String? perDay,
-      String? logsID}) async {
+  Future<void> uploadItemDataToFireStore({
+    String? serviceName,
+    String? noOfDays,
+    String? total,
+    String? perDay,
+    String? logsID,
+    String? contractorID,
+  }) async {
     DocumentReference<Map<String, dynamic>> doc = await FirebaseFirestore
         .instance
         .collection("orders")
-        .doc(" " + loggedInUser!.uid)
+        .doc(loggedInUser!.uid)
         .collection("logs")
         .doc(logsID)
         .collection("services")
@@ -54,17 +57,28 @@ class ServiceLogsProvider with ChangeNotifier {
       "noOfDays": noOfDays,
       "total": total,
       "perDay": perDay,
-      "logsID": logsID
+    });
+    await FirebaseFirestore.instance
+        .collection("orders")
+        .doc(contractorID!)
+        .collection("logs")
+        .doc(logsID)
+        .collection("services")
+        .add({
+      "serviceName": serviceName,
+      "noOfDays": noOfDays,
+      "total": total,
+      "perDay": perDay,
     });
     _servicelist.insert(
       0,
       ServiceLogModel(
-          serviceID: doc.id,
-          serviceName: serviceName,
-          perDay: perDay,
-          noOfDays: noOfDays,
-          total: total,
-          logsID: logsID),
+        serviceID: doc.id,
+        serviceName: serviceName,
+        perDay: perDay,
+        noOfDays: noOfDays,
+        total: total,
+      ),
     );
     notifyListeners();
   }
@@ -73,10 +87,5 @@ class ServiceLogsProvider with ChangeNotifier {
     return _servicelist
         .where((element) => element.serviceID!.trim() == serviceLogID.trim())
         .toList();
-  }
-
-  ServiceLogModel getserviceBylogsID(String logsID) {
-    return _servicelist
-        .firstWhere((element) => element.logsID!.trim() == logsID.trim());
   }
 }

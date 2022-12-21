@@ -8,6 +8,7 @@ import 'package:kingcustomer/providers/customer_provider.dart';
 import 'package:kingcustomer/providers/inventory_provider.dart';
 import 'package:kingcustomer/providers/order_provider.dart';
 import 'package:kingcustomer/providers/service_log_provider.dart';
+import 'package:kingcustomer/widgets/mycontainer.dart';
 import 'package:provider/provider.dart';
 import '../../providers/agreement_provider.dart';
 
@@ -296,43 +297,67 @@ class ReceiveAgreement extends StatelessWidget {
                                     showDialog(
                                       context: context,
                                       barrierDismissible: false,
-                                      builder: ((context) => const Center(
-                                          child: CircularProgressIndicator())),
+                                      builder: ((context) => WillPopScope(
+                                            onWillPop: () async => false,
+                                            child: const Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                          )),
                                     );
-                                    await agreementProvider.updateStatus(
-                                        agreementID,
-                                        true,
-                                        contractorModel.userID!);
-                                    final doc = await FirebaseFirestore.instance
-                                        .collection("orders")
-                                        .doc(" " + customerModel.userID!)
-                                        .collection("logs")
-                                        .add({});
-                                    await inventoryProvider
-                                        .uploadItemDataToFireStore(
-                                            itemName: "",
-                                            perItem: "",
-                                            qty: "",
-                                            total: "",
-                                            logsID: doc.id);
-                                    await servicelogsProvider
-                                        .uploadItemDataToFireStore(
-                                            noOfDays: "",
-                                            perDay: "",
-                                            serviceName: "",
-                                            total: "",
-                                            logsID: doc.id);
-                                    await ordersProvider.uploadData(
-                                        aggrementID: agreementID,
-                                        grandTotal: "",
-                                        inventoryTotal: "",
-                                        logsID: doc.id,
-                                        serviceTotal: "",
-                                        status: "Pending");
-                                    await inventoryProvider
-                                        .fetchInventory(doc.id);
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
+                                    try {
+                                      final doc = await FirebaseFirestore
+                                          .instance
+                                          .collection("orders")
+                                          .doc(customerModel.userID!)
+                                          .collection("logs")
+                                          .add({});
+                                      await inventoryProvider
+                                          .uploadItemDataToFireStore(
+                                              itemName: "",
+                                              perItem: "",
+                                              qty: "",
+                                              total: "",
+                                              logsID: doc.id,
+                                              contractorID:
+                                                  contractorModel.userID);
+                                      await servicelogsProvider
+                                          .uploadItemDataToFireStore(
+                                              noOfDays: "",
+                                              perDay: "",
+                                              serviceName: "",
+                                              total: "",
+                                              logsID: doc.id,
+                                              contractorID:
+                                                  contractorModel.userID);
+                                      await ordersProvider.uploadData(
+                                          contractorID: contractorModel.userID!,
+                                          aggrementID: agreementID,
+                                          grandTotal: "",
+                                          inventoryTotal: "",
+                                          logsID: doc.id,
+                                          serviceTotal: "",
+                                          status: "Pending");
+                                      await inventoryProvider
+                                          .fetchInventory(doc.id);
+                                      await agreementProvider.updateStatus(
+                                          agreementID,
+                                          true,
+                                          contractorModel.userID!);
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      Navigator.pop(context);
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => Center(
+                                            child: MyContainer(
+                                          height: setHeight(10),
+                                          width: setWidth(50),
+                                          child: Text("Error Accepting Order " +
+                                              e.toString()),
+                                        )),
+                                      );
+                                    }
                                   },
                                   child: const Text("Accept",
                                       style: TextStyle(

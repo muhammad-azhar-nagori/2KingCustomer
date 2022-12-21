@@ -56,8 +56,9 @@ class _CreateStoryState extends State<CreateStory> {
         showDialog(
           context: context,
           barrierDismissible: false,
-          builder: ((context) =>
-              const Center(child: CircularProgressIndicator())),
+          builder: ((context) => WillPopScope(
+              onWillPop: () async => false,
+              child: const Center(child: CircularProgressIndicator()))),
         );
         String? imageURL = await storyProvider.uploadImageToStorage(
             imagePath: _imagePath, userID: loggedInUser.userID);

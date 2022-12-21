@@ -127,32 +127,10 @@ class ViewServicesLogs extends StatelessWidget {
         child: BottomAppBar(
             child: Container(
           color: Colors.yellow,
-          height: setHeight(14),
+          height: setHeight(7),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: setHeight(7),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        fixedSize: Size(setWidth(40), setHeight(5)),
-                        side: const BorderSide(
-                          width: 0,
-                        ),
-                        elevation: 3,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                      ),
-                      onPressed: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (context) => const AddServiceItem());
-                      },
-                      child: const Text("Add Service")),
-                ),
-              ),
               SizedBox(
                 height: setHeight(7),
                 child: Row(

@@ -137,27 +137,7 @@ Future<dynamic> orderDetails(
                           ),
                         ),
                         onPressed: () async {
-                          // showDialog(
-                          //     context: context,
-                          //     builder: (context) => const Center(
-                          //         child: CircularProgressIndicator()));
-                          // ServiceLogsProvider serviceLogsProvider =
-                          //     Provider.of<ServiceLogsProvider>(context,
-                          //         listen: false);
-
-                          // InventoryProvider inventoryProvider =
-                          //     Provider.of<InventoryProvider>(context,
-                          //         listen: false);
-                          // await serviceLogsProvider
-                          //     .fetchServiceLog(ordersModel.logsID!);
-                          // await inventoryProvider
-                          //     .fetchInventory(ordersModel.logsID!);
-
-                          // List<InventoryModel> inventoryList =
-                          //     inventoryProvider.getInventoryList;
-                          // List<ServiceLogModel> serviceLogList =
-                          //     serviceLogsProvider.getServicelist;
-                          // Navigator.pop(context);
+                         
                           Navigator.push(
                             context,
                             MaterialPageRoute(
