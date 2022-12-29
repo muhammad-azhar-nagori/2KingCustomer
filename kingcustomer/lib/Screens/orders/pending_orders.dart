@@ -34,21 +34,6 @@ class PendingOrders extends StatelessWidget {
       ),
       physics: const BouncingScrollPhysics(),
     );
-    //  ListView.separated(
-    //   separatorBuilder: (context, index) => const Divider(
-    //     thickness: 0.2,
-    //     color: Colors.black,
-    //   ),
-    //   itemCount: 11,
-    //   itemBuilder: (context, index) => (Column(
-    //     mainAxisAlignment: MainAxisAlignment.start,
-    //     crossAxisAlignment: CrossAxisAlignment.start,
-    //     textDirection: TextDirection.ltr,
-    //     children: [
-    //       activeOrderTile(),
-    //     ],
-    //   )),
-    // );
   }
 }
 

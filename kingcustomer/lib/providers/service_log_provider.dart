@@ -80,7 +80,20 @@ class ServiceLogsProvider with ChangeNotifier {
         total: total,
       ),
     );
+    _servicelist.removeWhere((element) =>
+        element.serviceName == "" &&
+        element.total == "" &&
+        element.perDay == "" &&
+        element.noOfDays == "");
     notifyListeners();
+  }
+
+  String serviceTotal() {
+    double _sumofService = 0;
+    for (var element in _servicelist) {
+      _sumofService += double.parse(element.total!);
+    }
+    return _sumofService.toString();
   }
 
   List<ServiceLogModel> getserviceByServiceID(String serviceLogID) {

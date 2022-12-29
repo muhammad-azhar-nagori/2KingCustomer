@@ -75,7 +75,6 @@ class OpenPost extends StatelessWidget {
                       color: Colors.black.withOpacity(0.2),
                     ),
                   ),
-                  PostBottom(postModel: postModel),
                 ],
               ),
             ),

@@ -53,13 +53,13 @@ class ActiveOrderTile extends StatelessWidget {
         aggrementProvider.getAgreementByID(ordersModel.aggrementID!);
     ContractorsProvider userProvider =
         Provider.of<ContractorsProvider>(context);
-    ContractorsModel customerModel =
-        userProvider.getUserByID(aggrementModel.customerID!);
+    ContractorsModel contractorModel =
+        userProvider.getUserByID(aggrementModel.contractorID!);
     return ListTile(
       onTap: () =>
-          orderDetails(context, aggrementModel, customerModel, ordersModel),
+          orderDetails(context, aggrementModel, contractorModel, ordersModel,),
       leading: const Icon(Icons.area_chart),
-      title: Text(customerModel.name!,
+      title: Text(contractorModel.name!,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
       subtitle: Column(
         mainAxisAlignment: MainAxisAlignment.start,

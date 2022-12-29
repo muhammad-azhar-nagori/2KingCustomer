@@ -4,6 +4,7 @@ import 'package:kingcustomer/Screens/newsfeed/Post/post_header.dart';
 import 'package:kingcustomer/Screens/newsfeed/Post/post_item.dart';
 import 'package:kingcustomer/models/post_model.dart';
 import 'package:provider/provider.dart';
+import '../../../providers/comments_provider.dart';
 import '../../../providers/contractor_provider.dart';
 
 class Post extends StatelessWidget {
@@ -14,6 +15,8 @@ class Post extends StatelessWidget {
     final postModel = Provider.of<PostModel>(context);
     final userProvider = Provider.of<ContractorsProvider>(context);
     final user = userProvider.getUserByID(postModel.userID!);
+    final commentsProvider = Provider.of<CommentsProvider>(context);
+    commentsProvider.fetch(postModel.postID!);
     return Card(
       color: const Color.fromARGB(255, 255, 230, 149),
       child: Column(
@@ -25,7 +28,7 @@ class Post extends StatelessWidget {
               date: postModel.postedTime,
               profilePicURL: user.profileImageURL!),
           PostItem(imageURL: postModel.imageURL, caption: postModel.caption),
-          PostBottom(postModel: postModel),
+          PostBottom(postModel: postModel, commentsProvider: commentsProvider),
         ],
       ),
     );

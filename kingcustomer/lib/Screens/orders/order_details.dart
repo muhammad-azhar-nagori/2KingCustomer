@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kingcustomer/Screens/Chat/aggrement_message.dart';
-import 'package:kingcustomer/Screens/orders/Logs/view_aggrement.dart';
-import 'package:kingcustomer/Screens/orders/Logs/logs.dart';
-import 'package:kingcustomer/components/profile_header.dart';
-import 'package:kingcustomer/models/agreement_model.dart';
-import 'package:kingcustomer/models/orders_model.dart';
 import 'package:kingcustomer/models/contractor_model.dart';
+import '../../Screens/orders/Logs/view_aggrement.dart';
+import '../../Screens/orders/Logs/logs.dart';
+import '../../components/profile_header.dart';
+import '../../models/agreement_model.dart';
+import '../../models/orders_model.dart';
 import '../../helper/size_configuration.dart';
 
 Future<dynamic> orderDetails(
@@ -58,11 +57,11 @@ Future<dynamic> orderDetails(
                 color: Colors.greenAccent,
                 height: setHeight(10),
                 child: ProfileHeader(
-                    title: contractorModel.name!,
-                    imageURL: contractorModel.profileImageURL!,
-                    email: contractorModel.email!,
-                    phoneNumber: contractorModel.contactNumber!,
-                    rating: contractorModel.rating!),
+                  title: contractorModel.name!,
+                  imageURL: contractorModel.profileImageURL!,
+                  email: contractorModel.email!,
+                  phoneNumber: contractorModel.contactNumber!,
+                ),
               ),
               Container(
                   height: setHeight(30),
@@ -83,7 +82,7 @@ Future<dynamic> orderDetails(
                         height: getProportionateScreenHeight(2),
                       ),
                       Text(
-                        "Started: " +
+                        "Start Date: " +
                             aggrementModel.startDate
                                 .toString()
                                 .split(" ")
@@ -93,11 +92,8 @@ Future<dynamic> orderDetails(
                         ),
                       ),
                       Text(
-                        "Ended:   " +
-                            aggrementModel.startDate
-                                .toString()
-                                .split(" ")
-                                .first,
+                        "End Date:   " +
+                            aggrementModel.endDate.toString().split(" ").first,
                         style: TextStyle(
                           fontSize: getProportionateScreenHeight(16),
                         ),
@@ -127,36 +123,83 @@ Future<dynamic> orderDetails(
                 color: const Color.fromARGB(255, 255, 255, 255),
                 child: Row(
                   children: [
-                    SizedBox(
-                      height: setHeight(7),
-                      width: setWidth(30),
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.amberAccent,
-                          ),
-                        ),
-                        onPressed: () async {
-                         
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Logs(
-                                title: contractorModel.name!,
-                                ordersModel: ordersModel,
+                    ordersModel.status != "Pending"
+                        ? SizedBox(
+                            height: setHeight(7),
+                            width: setWidth(30),
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                  Colors.amberAccent,
+                                ),
+                              ),
+                              onPressed: () async {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Logs(
+                                      title: contractorModel.name!,
+                                      ordersModel: ordersModel,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "View Logs",
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: getProportionateScreenHeight(18),
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
-                          );
-                        },
-                        child: Text(
-                          "View Logs",
-                          style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: getProportionateScreenHeight(18),
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
+                          )
+                        // : SizedBox(
+                        //     height: setHeight(7),
+                        //     width: setWidth(30),
+                        //     child: ElevatedButton(
+                        //       style: ButtonStyle(
+                        //         backgroundColor:
+                        //             MaterialStateProperty.all<Color>(
+                        //           Colors.amberAccent,
+                        //         ),
+                        //       ),
+                        //       onPressed: () async {
+                        //         showDialog(
+                        //           context: context,
+                        //           barrierDismissible: false,
+                        //           builder: ((context) => WillPopScope(
+                        //                 onWillPop: () async => false,
+                        //                 child: const Center(
+                        //                     child: CircularProgressIndicator()),
+                        //               )),
+                        //         );
+                        //         try {
+
+                        //         } catch (e) {
+                        //           Navigator.pop(context);
+                        //           showDialog(
+                        //             context: context,
+                        //             builder: (context) => Center(
+                        //                 child: MyContainer(
+                        //               height: setHeight(10),
+                        //               width: setWidth(50),
+                        //               child: Text("Error Accepting Order " +
+                        //                   e.toString()),
+                        //             )),
+                        //           );
+                        //         }
+                        //       },
+                        //       child: Text(
+                        //         "Activate Order Now",
+                        //         style: TextStyle(
+                        //             color: Colors.black87,
+                        //             fontSize: getProportionateScreenHeight(18),
+                        //             fontWeight: FontWeight.bold),
+                        //       ),
+                        //     ),
+                        //   ),
+                        : const SizedBox(),
                     const Spacer(),
                     SizedBox(
                       height: setHeight(7),
@@ -171,9 +214,7 @@ Future<dynamic> orderDetails(
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ReceiveAgreement(
-                                agreementID: aggrementModel.agreementID!,
-                              ),
+                              builder: (context) => ViewAggrement(),
                             ),
                           );
                         },
@@ -181,9 +222,10 @@ Future<dynamic> orderDetails(
                           "View Aggrement",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: getProportionateScreenHeight(18),
-                              fontWeight: FontWeight.bold),
+                            color: Colors.black87,
+                            fontSize: getProportionateScreenHeight(18),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),

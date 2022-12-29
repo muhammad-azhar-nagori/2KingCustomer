@@ -40,6 +40,18 @@ class ContractorsProvider with ChangeNotifier {
         .first;
   }
 
+  Future<void> updateRating({
+    String? postID,
+    List? rating,
+  }) async {
+    FirebaseFirestore.instance
+        .collection("post")
+        .doc(postID)
+        .update({'rating': rating});
+
+    notifyListeners();
+  }
+
   Future<void> uploadUserDataToFireStore({
     String? userID,
     String? email,

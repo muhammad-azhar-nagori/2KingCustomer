@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:kingcustomer/Screens/flashscreen/flashscreen.dart';
 import 'package:kingcustomer/providers/agreement_provider.dart';
 import 'package:kingcustomer/providers/chat_provider.dart';
+import 'package:kingcustomer/providers/comments_provider.dart';
 import 'package:kingcustomer/providers/current_user_provider.dart';
 import 'package:kingcustomer/providers/customer_provider.dart';
 import 'package:kingcustomer/providers/inventory_provider.dart';
@@ -92,6 +93,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AgreementProvider()),
         ChangeNotifierProvider(create: (_) => ServiceLogsProvider()),
         ChangeNotifierProvider(create: (_) => InventoryProvider()),
+        ChangeNotifierProvider(create: (_) => CommentsProvider()),
       ],
       child: MaterialApp(
         title: "kingcustomer",

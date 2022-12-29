@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,6 @@ import '../models/inventory_model.dart';
 class InventoryProvider with ChangeNotifier {
   final loggedInUser = FirebaseAuth.instance.currentUser;
   List<InventoryModel> _list = [];
-
   List<InventoryModel> get getInventoryList => _list;
   void clearList() {
     _list.clear();
@@ -80,7 +81,20 @@ class InventoryProvider with ChangeNotifier {
         total: total,
       ),
     );
+    _list.removeWhere((element) =>
+        element.itemName == "" &&
+        element.total == "" &&
+        element.qty == "" &&
+        element.perItem == "");
     notifyListeners();
+  }
+
+  String inventoryTotal() {
+    double _sumOfInventory = 0;
+    for (var element in _list) {
+      _sumOfInventory += double.parse(element.total!);
+    }
+    return _sumOfInventory.toString();
   }
 
   Future<void> deleteItem(

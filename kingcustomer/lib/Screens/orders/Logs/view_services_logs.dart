@@ -152,7 +152,7 @@ class ViewServicesLogs extends StatelessWidget {
                       padding: EdgeInsets.all(getProportionateScreenHeight(8)),
                       height: 50,
                       child: Text(
-                        ordersModel.inventoryTotal!,
+                        serviceProvider.serviceTotal(),
                         style: const TextStyle(fontSize: 24),
                       ),
                     ),

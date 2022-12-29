@@ -80,7 +80,7 @@ class ViewInventoryLogs extends StatelessWidget {
                       padding: EdgeInsets.all(getProportionateScreenHeight(8)),
                       height: 50,
                       child: Text(
-                        ordersModel.inventoryTotal!,
+                        inventoryProvider.inventoryTotal(),
                         style: const TextStyle(fontSize: 24),
                       ),
                     ),

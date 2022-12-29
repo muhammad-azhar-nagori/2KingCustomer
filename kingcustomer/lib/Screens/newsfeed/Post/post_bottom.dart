@@ -1,27 +1,40 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:kingcustomer/models/post_model.dart';
+import '../../../models/post_model.dart';
+import '../../../providers/contractor_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../helper/size_configuration.dart';
-import '../../../providers/customer_provider.dart';
+import '../../../providers/comments_provider.dart';
 import '../../../providers/post_provider.dart';
 import 'comments.dart';
 import 'like.dart';
 
-class PostBottom extends StatelessWidget {
+class PostBottom extends StatefulWidget {
   const PostBottom({
     required this.postModel,
     Key? key,
+    required this.commentsProvider,
   }) : super(key: key);
   final PostModel postModel;
+  final CommentsProvider commentsProvider;
+  @override
+  State<PostBottom> createState() => _PostBottomState();
+}
+
+class _PostBottomState extends State<PostBottom> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final currentUserProvider = Provider.of<CustomerProvider>(context);
+    final currentUserProvider = Provider.of<ContractorsProvider>(context);
     String loggedinUserID = currentUserProvider
         .getUserByID(FirebaseAuth.instance.currentUser!.uid.trim())
         .userID!;
     final postProvider = Provider.of<PostProvider>(context);
+
     return SizedBox(
       height: setHeight(7),
       width: setWidth(100),
@@ -37,8 +50,10 @@ class PostBottom extends StatelessWidget {
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(postModel.likes!.length.toString() + "likes"),
-                      Text(postModel.comments!.length.toString() + "comments"),
+                      Text(
+                          widget.postModel.likes!.length.toString() + " Likes"),
+                      Text(widget.commentsProvider.getList.length.toString() +
+                          " Comments"),
                     ]),
               )),
           Row(
@@ -47,18 +62,20 @@ class PostBottom extends StatelessWidget {
               Center(
                 child: GestureDetector(
                     child: Like(
-                      isLiked: postModel.likes!.contains(loggedinUserID),
+                      isLiked: widget.postModel.likes!.contains(loggedinUserID),
                     ),
                     onTap: () {
-                      if (!postModel.likes!.contains(loggedinUserID)) {
-                        postModel.likes!.add(loggedinUserID);
+                      if (!widget.postModel.likes!.contains(loggedinUserID)) {
+                        widget.postModel.likes!.add(loggedinUserID);
                         postProvider.updateLikes(
-                            likes: postModel.likes, postID: postModel.postID);
+                            likes: widget.postModel.likes,
+                            postID: widget.postModel.postID);
                       } else {
-                        postModel.likes!.removeWhere(
+                        widget.postModel.likes!.removeWhere(
                             (element) => element == loggedinUserID);
                         postProvider.updateLikes(
-                            likes: postModel.likes, postID: postModel.postID);
+                            likes: widget.postModel.likes,
+                            postID: widget.postModel.postID);
                       }
                     }),
               ),
@@ -69,7 +86,10 @@ class PostBottom extends StatelessWidget {
                   color: Colors.black.withOpacity(0.2),
                 ),
               ),
-              Comments(postModel: postModel, postProvider: postProvider),
+              Comments(
+                  postModel: widget.postModel,
+                  postProvider: postProvider,
+                  commentsProvider: widget.commentsProvider),
             ],
           ),
         ],

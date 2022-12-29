@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:kingcustomer/Screens/newsfeed/Post/post.dart';
 import 'package:kingcustomer/components/profile_header.dart';
 import 'package:kingcustomer/helper/size_configuration.dart';
@@ -50,11 +52,89 @@ class ProfileView extends StatelessWidget {
               height: 800,
               child: ListView(
                 children: [
-                  ProfileHeader(
-                    title: user.name!,
-                    email: user.email!,
-                    phoneNumber: user.contactNumber!,
-                    imageURL: user.profileImageURL!,
+                  Container(
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: getProportionateScreenHeight(60),
+                            width: getProportionateScreenWidth(60),
+                            child: CircleAvatar(
+                              child: ClipOval(
+                                child: CachedNetworkImage(
+                                  imageUrl: user.profileImageURL!,
+                                  fit: BoxFit.cover,
+                                  height: getProportionateScreenHeight(60),
+                                  width: getProportionateScreenHeight(60),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                EdgeInsets.all(getProportionateScreenHeight(8)),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  user.name!,
+                                  style: TextStyle(
+                                      fontSize:
+                                          getProportionateScreenHeight(20),
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  user.email!,
+                                  style: TextStyle(
+                                    fontSize: getProportionateScreenHeight(14),
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                                Text(
+                                  user.contactNumber!,
+                                  style: TextStyle(
+                                    fontSize: getProportionateScreenHeight(14),
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Spacer(),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              RatingBar.builder(
+                                initialRating: (user.rating!.length) / 5,
+                                direction: Axis.horizontal,
+                                minRating: 0,
+                                maxRating: 5,
+                                itemBuilder: ((context, _) => const Icon(
+                                      Icons.star,
+                                      color: Colors.lightBlueAccent,
+                                    )),
+                                ignoreGestures: true,
+                                onRatingUpdate: (newRatingValue) { 
+                                  
+                                },
+                                updateOnDrag: true,
+                                
+                                allowHalfRating: true,
+                                glow: false,
+                                itemCount: 5,
+                                itemSize: getProportionateScreenHeight(15),
+                                textDirection: TextDirection.ltr,
+                              ),
+                              Text(
+                                ((user.rating!.length) / 5).toString(),
+                                textAlign: TextAlign.right,
+                              ),
+                            ],
+                          ),
+                        ]),
                   ),
                   const Divider(
                     thickness: 1,
