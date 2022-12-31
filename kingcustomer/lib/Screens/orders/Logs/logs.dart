@@ -177,7 +177,10 @@ class Logs extends StatelessWidget {
                       padding: EdgeInsets.all(getProportionateScreenHeight(8)),
                       height: 50,
                       child: Text(
-                        ordersModel.grandTotal!,
+                        (double.parse(inventoryProvider.inventoryTotal()) +
+                                double.parse(
+                                    servicelogsProvider.serviceTotal()))
+                            .toString(),
                         style: const TextStyle(fontSize: 24),
                       ),
                     ),

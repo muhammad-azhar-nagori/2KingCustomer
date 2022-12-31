@@ -33,25 +33,6 @@ class HomePage extends StatelessWidget {
             fontSize: (kToolbarHeight / 100) * 40,
           ),
         ),
-        actions: [
-          IconButton(
-            color: Colors.black,
-            onPressed: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.rightToLeftWithFade,
-                  child: SearchHome(),
-                  isIos: true,
-                  duration: const Duration(milliseconds: 400),
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.search,
-            ),
-          ),
-        ],
         centerTitle: true,
         elevation: 1,
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),

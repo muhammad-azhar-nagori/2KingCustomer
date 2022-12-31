@@ -26,7 +26,7 @@ class Like extends StatelessWidget {
           Icon(
             Icons.thumb_up,
             color: isLiked ? Colors.blueAccent : Colors.black,
-          ),
+          ), 
           SizedBox(
             width: getProportionateScreenWidth(10),
           ),

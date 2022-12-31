@@ -41,12 +41,14 @@ class ContractorsProvider with ChangeNotifier {
   }
 
   Future<void> updateRating({
-    String? postID,
+    String? userID,
     List? rating,
   }) async {
     FirebaseFirestore.instance
-        .collection("post")
-        .doc(postID)
+        .collection("users")
+        .doc("Y1DImckjzK5z2khAEi7o")
+        .collection("contractors")
+        .doc(userID)
         .update({'rating': rating});
 
     notifyListeners();

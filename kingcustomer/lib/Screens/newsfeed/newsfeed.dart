@@ -1,14 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:kingcustomer/Screens/newsfeed/create_post.dart';
 import 'package:kingcustomer/Screens/newsfeed/Post/post.dart';
-import 'package:kingcustomer/providers/current_user_provider.dart';
 import 'package:kingcustomer/providers/post_provider.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import '../../helper/size_configuration.dart';
-import '../../providers/customer_provider.dart';
 
 class Newsfeed extends StatefulWidget {
   const Newsfeed({Key? key}) : super(key: key);
@@ -24,9 +18,6 @@ class _NewsfeedState extends State<Newsfeed> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<CustomerProvider>(context);
-    final loggedInUser =
-        userProvider.getUserByID(FirebaseAuth.instance.currentUser!.uid.trim());
     final postProvider = Provider.of<PostProvider>(context);
     final postsList = postProvider.getList;
     Future<void> _onRefresh() async {

@@ -4,6 +4,7 @@ import 'package:kingcustomer/models/contractor_model.dart';
 import 'package:provider/provider.dart';
 import '../helper/size_configuration.dart';
 import '../providers/chat_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BottomCallChat extends StatelessWidget {
   const BottomCallChat({
@@ -19,16 +20,24 @@ class BottomCallChat extends StatelessWidget {
     return BottomAppBar(
       child: Row(
         children: [
-          Container(
-            height: 50,
-            width: getProportionateScreenWidth(375 / 2),
-            color: Colors.amber,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(Icons.call),
-                Text("Call"),
-              ],
+          GestureDetector(
+            onTap: () async {
+              Uri phoneno = Uri.parse(user!.contactNumber!);
+              if (await launchUrl(phoneno)) {
+                //dialer opened
+              } 
+            },
+            child: Container(
+              height: 50,
+              width: getProportionateScreenWidth(375 / 2),
+              color: Colors.amber,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.call),
+                  Text("Call"),
+                ],
+              ),
             ),
           ),
           GestureDetector(

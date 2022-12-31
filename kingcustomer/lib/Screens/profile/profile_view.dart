@@ -1,24 +1,47 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:kingcustomer/Screens/newsfeed/Post/post.dart';
-import 'package:kingcustomer/components/profile_header.dart';
 import 'package:kingcustomer/helper/size_configuration.dart';
 import 'package:provider/provider.dart';
+import '../../providers/customer_provider.dart';
 import '../../providers/post_provider.dart';
 import '../../providers/contractor_provider.dart';
 import '../../widgets/chat_call_bottom_bar.dart';
 import '../Dashboard/dashboard.dart';
 
-class ProfileView extends StatelessWidget {
+class ProfileView extends StatefulWidget {
   const ProfileView({super.key, required this.userID});
   final String? userID;
+
+  @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  double ratingg(List rating) {
+    double length = rating.length.toDouble() - 1;
+    double total = 0;
+    for (var r in rating) {
+      total += double.parse(r.split(" ")[1]);
+    }
+    return total / length;
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<ContractorsProvider>(context);
-    final user = userProvider.getUserByID(userID!);
+    final user = userProvider.getUserByID(widget.userID!);
     final postProvider = Provider.of<PostProvider>(context);
     final postsList = postProvider.getPostByID(user.userID!);
+    final currentUserProvider = Provider.of<CustomerProvider>(context);
+    String loggedinUserID = currentUserProvider
+        .getUserByID(FirebaseAuth.instance.currentUser!.uid.trim())
+        .userID!;
+
+    final double starRating = ratingg(user.rating!);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -108,28 +131,42 @@ class ProfileView extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               RatingBar.builder(
-                                initialRating: (user.rating!.length) / 5,
-                                direction: Axis.horizontal,
+                                initialRating: starRating.toStringAsFixed(1) == "Infinity"
+                                    ? 0:starRating,
                                 minRating: 0,
                                 maxRating: 5,
                                 itemBuilder: ((context, _) => const Icon(
                                       Icons.star,
                                       color: Colors.lightBlueAccent,
                                     )),
-                                ignoreGestures: true,
-                                onRatingUpdate: (newRatingValue) { 
-                                  
+                                ignoreGestures: false,
+                                onRatingUpdate: (newRatingValue) {
+                                  List _newlist = user.rating!;
+                                  for (int i = 0;
+                                      i < user.rating!.length;
+                                      i++) {
+                                    if (user.rating![i].split(" ")[0] ==
+                                        loggedinUserID) {
+                                      user.rating!.removeAt(i);
+                                    }
+                                  }
+                                  _newlist
+                                      .add(loggedinUserID + " $newRatingValue");
+                                  userProvider.updateRating(
+                                      userID: user.userID,
+                                      rating: user.rating!);
                                 },
-                                updateOnDrag: true,
-                                
-                                allowHalfRating: true,
+                                updateOnDrag: false,
+                                allowHalfRating: false,
                                 glow: false,
                                 itemCount: 5,
                                 itemSize: getProportionateScreenHeight(15),
                                 textDirection: TextDirection.ltr,
                               ),
                               Text(
-                                ((user.rating!.length) / 5).toString(),
+                                starRating.toStringAsFixed(1) == "Infinity"
+                                    ? ""
+                                    : starRating.toStringAsFixed(1),
                                 textAlign: TextAlign.right,
                               ),
                             ],

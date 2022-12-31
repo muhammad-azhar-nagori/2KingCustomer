@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kingcustomer/Screens/loginSignup/login.dart';
 import 'package:kingcustomer/providers/agreement_provider.dart';
+import 'package:kingcustomer/providers/comments_provider.dart';
 import 'package:kingcustomer/providers/customer_provider.dart';
 import 'package:kingcustomer/providers/inventory_provider.dart';
 import 'package:kingcustomer/providers/message_provider.dart';
@@ -11,7 +12,6 @@ import 'package:kingcustomer/providers/post_provider.dart';
 import 'package:kingcustomer/providers/worker_provider.dart';
 import 'package:provider/provider.dart';
 import '../../providers/chat_provider.dart';
-import '../../providers/current_user_provider.dart';
 import '../../providers/service_log_provider.dart';
 import '../../providers/order_provider.dart';
 import '../../providers/service_provider.dart';
@@ -83,11 +83,15 @@ class _FlashScreenState extends State<FlashScreen> {
       try {
         final ordersProvider =
             Provider.of<OrdersProvider>(context, listen: false);
-        ordersProvider.fetch();
+        await ordersProvider.fetch();
 
         Provider.of<ServiceLogsProvider>(context, listen: false);
 
         Provider.of<InventoryProvider>(context, listen: false);
+
+        final commentsProvider =
+            Provider.of<CommentsProvider>(context, listen: false);
+        await commentsProvider.fetch();
       } catch (e) {}
       Navigator.pushReplacement(
           context,

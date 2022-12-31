@@ -50,15 +50,6 @@ class _ChatMenuState extends State<ChatMenu> {
             fontSize: (kToolbarHeight / 100) * 40,
           ),
         ),
-        actions: [
-          IconButton(
-            color: Colors.black,
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search,
-            ),
-          ),
-        ],
         centerTitle: true,
         elevation: 1,
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
@@ -79,7 +70,6 @@ class _ChatMenuState extends State<ChatMenu> {
           itemBuilder: (context, int index) => ChangeNotifierProvider.value(
             value: chatList[index],
             child: ChatMenuTile(
-
               onLongPress: () => showDialog(
                 barrierDismissible: false,
                 context: context,
@@ -100,9 +90,7 @@ class _ChatMenuState extends State<ChatMenu> {
                   .services!
                   .first,
               user: userProvider.getUserByID(chatList[index].otherID!),
-              image: CachedNetworkImageProvider(
-                
-                userProvider
+              image: CachedNetworkImageProvider(userProvider
                   .getUserByID(chatList[index].otherID!)
                   .profileImageURL!),
             ),
@@ -141,7 +129,6 @@ class ChatMenuTile extends StatelessWidget {
       title: Text(user.name!),
       subtitle: Text(subtitle),
       leading: CircleAvatar(
-        
         backgroundImage: const AssetImage(
           "assets/images/logo-black-half.png",
         ),

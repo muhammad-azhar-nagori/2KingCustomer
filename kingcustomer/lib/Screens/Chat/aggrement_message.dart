@@ -222,26 +222,12 @@ class ReceiveAgreement extends StatelessWidget {
                               shrinkWrap: true,
                               itemCount:
                                   agreementModel.services!.toList().length,
-                              itemBuilder: (context, int index) => Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
+                              itemBuilder: (context, int index) => Text(
+                                (index + 1).toString() +
+                                    ".  " +
                                     agreementModel.services!.elementAt(index),
-                                    style: const TextStyle(
-                                        color: Colors.black, fontSize: 11),
-                                  ),
-                                  Text(
-                                    agreementModel.services!.elementAt(index),
-                                    style: const TextStyle(
-                                        color: Colors.black, fontSize: 11),
-                                  ),
-                                  Text(
-                                    agreementModel.services!.elementAt(index),
-                                    style: const TextStyle(
-                                        color: Colors.black, fontSize: 11),
-                                  ),
-                                ],
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 14),
                               ),
                             ),
                           ),

@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:kingcustomer/providers/customer_provider.dart';
 import '../../../models/post_model.dart';
-import '../../../providers/contractor_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../helper/size_configuration.dart';
-import '../../../providers/comments_provider.dart';
 import '../../../providers/post_provider.dart';
 import 'comments.dart';
 import 'like.dart';
@@ -13,10 +12,8 @@ class PostBottom extends StatefulWidget {
   const PostBottom({
     required this.postModel,
     Key? key,
-    required this.commentsProvider,
   }) : super(key: key);
   final PostModel postModel;
-  final CommentsProvider commentsProvider;
   @override
   State<PostBottom> createState() => _PostBottomState();
 }
@@ -29,7 +26,7 @@ class _PostBottomState extends State<PostBottom> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUserProvider = Provider.of<ContractorsProvider>(context);
+    final currentUserProvider = Provider.of<CustomerProvider>(context);
     String loggedinUserID = currentUserProvider
         .getUserByID(FirebaseAuth.instance.currentUser!.uid.trim())
         .userID!;
@@ -52,8 +49,6 @@ class _PostBottomState extends State<PostBottom> {
                     children: [
                       Text(
                           widget.postModel.likes!.length.toString() + " Likes"),
-                      Text(widget.commentsProvider.getList.length.toString() +
-                          " Comments"),
                     ]),
               )),
           Row(
@@ -87,9 +82,9 @@ class _PostBottomState extends State<PostBottom> {
                 ),
               ),
               Comments(
-                  postModel: widget.postModel,
-                  postProvider: postProvider,
-                  commentsProvider: widget.commentsProvider),
+                postModel: widget.postModel,
+                postProvider: postProvider,
+              ),
             ],
           ),
         ],

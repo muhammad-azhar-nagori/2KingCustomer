@@ -34,6 +34,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  void openCam() async {
+    final ImagePicker _picker = ImagePicker();
+    final _image = await _picker.pickImage(source: ImageSource.camera);
+    if (_image?.path != null) {
+      setState(() {
+        _selectedImageFile = File(_image!.path);
+        _imagePath = _image.path;
+      });
+    }
+  }
+
   Widget changeProfileImageBottomSheet() {
     return Container(
       decoration: BoxDecoration(
@@ -69,6 +80,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   onPressed: () {
                     //pickImage(imageSource: ImageSource.camera);
+                    openCam();
                   },
                   label: Text(
                     "Camera",

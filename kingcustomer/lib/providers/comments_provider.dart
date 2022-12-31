@@ -8,13 +8,8 @@ class CommentsProvider with ChangeNotifier {
 
   List<CommentsModel> get getList => _list;
 
-  Future<void> fetch(String postID) async {
-    await FirebaseFirestore.instance
-        .collection("post")
-        .doc(postID)
-        .collection("comments")
-        .get()
-        .then(
+  Future<void> fetch() async {
+    await FirebaseFirestore.instance.collection("comments").get().then(
           (QuerySnapshot<Map<String, dynamic>> snapshot) => {
             _list = [],
             for (var doc in snapshot.docs)
@@ -29,15 +24,25 @@ class CommentsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> uploadPostDataToFireStore(
+  List<CommentsModel> getCommentByPostID(String postID) {
+    List<CommentsModel> _newlist = [];
+    for (var element in _list) {
+      if (element.postID == postID) {
+        _newlist.add(element);
+      }
+    }
+    return _newlist;
+  }
+
+  Future<void> uploadCommentDataToFireStore(
       {required String userID,
       required String? text,
-      required String from}) async {
+      required String postID}) async {
     DocumentReference<Map<String, dynamic>> doc =
-        await FirebaseFirestore.instance.collection("post").add({
+        await FirebaseFirestore.instance.collection("comments").add({
       "userID": userID,
       "text": text,
-      "from": from,
+      "postID": postID,
     });
     _list.insert(
       0,
@@ -45,50 +50,4 @@ class CommentsProvider with ChangeNotifier {
     );
     notifyListeners();
   }
-
-  Future<void> updateLikes({
-    String? postID,
-    List? likes,
-  }) async {
-    FirebaseFirestore.instance
-        .collection("post")
-        .doc(postID)
-        .update({'likes': likes});
-
-    notifyListeners();
-  }
-
-  // Future<String> uploadImageToStorage(
-  //     {required String? imagePath,
-  //     required String? userID,
-  //     required String? imageType}) async {
-  //   File imageFile = File(imagePath!);
-
-  //   String _imageBaseName = basename(imageFile.path);
-  //   Reference imageReference = FirebaseStorage.instance
-  //       .ref()
-  //       .child("images")
-  //       .child(userID!)
-  //       .child(imageType!)
-  //       .child(_imageBaseName);
-  //   await imageReference.putFile(imageFile);
-  //   String getImageUrl = await imageReference.getDownloadURL();
-  //   notifyListeners();
-  //   return getImageUrl;
-  // }
-
-  // Future<void> deleteImageFromStorage(
-  //     {required String? imageURL,
-  //     required String? userID,
-  //     required String? imageType}) async {
-  //   String? imageName = imageURL!.split('2F')[2].split('?alt')[0];
-  //   await FirebaseStorage.instance
-  //       .ref()
-  //       .child("images")
-  //       .child(userID!)
-  //       .child(imageType!)
-  //       .child(imageName)
-  //       .delete();
-  //   notifyListeners();
-  // }
 }

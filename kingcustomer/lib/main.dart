@@ -68,7 +68,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
     ]);
     return MultiProvider(
       providers: [
@@ -96,7 +95,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CommentsProvider()),
       ],
       child: MaterialApp(
-        title: "kingcustomer",
+        title: "2Kings",
         theme: MyTheme.Mytheme(),
         home: const FlashScreen(),
       ),

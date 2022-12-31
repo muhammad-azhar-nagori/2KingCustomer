@@ -14,9 +14,19 @@ class ProfileHeader extends StatelessWidget {
   }) : super(key: key);
   final String title, email, phoneNumber, imageURL;
   final List<dynamic>? rating;
-  final double starRating = 3.6;
+
+  double ratingg(List rating) {
+    double length = rating.length.toDouble() - 1;
+    double total = 0;
+    for (var r in rating) {
+      total += double.parse(r.toString());
+    }
+    return total / length;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final double starRating = ratingg(rating!);
     return Container(
       color: const Color.fromARGB(255, 255, 255, 255),
       child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -69,7 +79,8 @@ class ProfileHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             RatingBar.builder(
-              initialRating: starRating,
+              initialRating:
+                  starRating.toStringAsFixed(1) == "Infinity" ? 0 : starRating,
               minRating: 0,
               maxRating: 5,
               itemBuilder: ((context, _) => const Icon(
@@ -86,7 +97,9 @@ class ProfileHeader extends StatelessWidget {
               textDirection: TextDirection.ltr,
             ),
             Text(
-              "$starRating",
+              starRating.toStringAsFixed(1) == "Infinity"
+                  ? ""
+                  : starRating.toStringAsFixed(1),
               textAlign: TextAlign.right,
             ),
           ],
