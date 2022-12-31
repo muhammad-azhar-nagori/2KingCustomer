@@ -44,7 +44,7 @@ class OrdersProvider with ChangeNotifier {
       String? status,
       String? logsID,
       required String contractorID}) async {
-    await FirebaseFirestore.instance
+    final orderID = await FirebaseFirestore.instance
         .collection("orders")
         .doc(loggedInUser!.uid)
         .collection("orderDetails")
@@ -60,7 +60,8 @@ class OrdersProvider with ChangeNotifier {
         .collection("orders")
         .doc(contractorID)
         .collection("orderDetails")
-        .add({
+        .doc(orderID.id)
+        .set({
       "aggrementID": aggrementID,
       "serviceTotal": serviceTotal,
       "inventoryTotal": inventoryTotal,

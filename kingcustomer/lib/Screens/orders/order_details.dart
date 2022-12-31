@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kingcustomer/Screens/profile/profile_view.dart';
 import 'package:kingcustomer/models/contractor_model.dart';
 import '../../Screens/orders/Logs/view_aggrement.dart';
 import '../../Screens/orders/Logs/logs.dart';
@@ -56,11 +57,20 @@ Future<dynamic> orderDetails(
                 margin: EdgeInsets.all(setHeight(1)),
                 color: Colors.greenAccent,
                 height: setHeight(10),
-                child: ProfileHeader(
-                  title: contractorModel.name!,
-                  imageURL: contractorModel.profileImageURL!,
-                  email: contractorModel.email!,
-                  phoneNumber: contractorModel.contactNumber!,
+                child: InkWell(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ProfileView(userID: contractorModel.userID),
+                      )),
+                  child: ProfileHeader(
+                    title: contractorModel.name!,
+                    imageURL: contractorModel.profileImageURL!,
+                    email: contractorModel.email!,
+                    phoneNumber: contractorModel.contactNumber!,
+                    rating: contractorModel.rating,
+                  ),
                 ),
               ),
               Container(

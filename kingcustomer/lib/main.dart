@@ -95,6 +95,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CommentsProvider()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: "2Kings",
         theme: MyTheme.Mytheme(),
         home: const FlashScreen(),

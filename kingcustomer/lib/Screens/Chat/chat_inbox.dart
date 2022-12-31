@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:kingcustomer/Screens/Chat/fill_aggrement_form.dart';
 import 'package:kingcustomer/Screens/Chat/aggrement_message.dart';
 import 'package:kingcustomer/Screens/loginSignup/mytextfield.dart';
 import 'package:kingcustomer/models/contractor_model.dart';

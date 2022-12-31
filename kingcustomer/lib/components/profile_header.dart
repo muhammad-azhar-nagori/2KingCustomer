@@ -14,12 +14,11 @@ class ProfileHeader extends StatelessWidget {
   }) : super(key: key);
   final String title, email, phoneNumber, imageURL;
   final List<dynamic>? rating;
-
   double ratingg(List rating) {
     double length = rating.length.toDouble() - 1;
     double total = 0;
     for (var r in rating) {
-      total += double.parse(r.toString());
+      total += double.parse(r.split(" ")[1]);
     }
     return total / length;
   }

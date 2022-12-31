@@ -74,26 +74,6 @@ class ActiveOrderTile extends StatelessWidget {
           ),
         ],
       ),
-      trailing: PopupMenuButton(itemBuilder: (context) {
-        return [
-          const PopupMenuItem<int>(
-            value: 0,
-            child: Text("Remove this notification"),
-          ),
-          const PopupMenuItem<int>(
-            value: 1,
-            child: Text("Turn off notification about this."),
-          ),
-          const PopupMenuItem<int>(
-            value: 2,
-            child: Text("report"),
-          ),
-        ];
-      }, onSelected: (value) {
-        if (value == 0) {
-        } else if (value == 1) {
-        } else if (value == 2) {}
-      }),
     );
   }
 }

@@ -15,6 +15,7 @@ import '../../providers/service_provider.dart';
 import '../../providers/contractor_provider.dart';
 import '../../providers/worker_provider.dart';
 import '../profile/my_profile_view.dart';
+import 'aboutus/aboutus.dart';
 
 class Menu extends StatelessWidget {
   const Menu({
@@ -144,12 +145,25 @@ class Menu extends StatelessWidget {
             color: Colors.black,
             height: 0,
           ),
-          const Divider(
-            thickness: 0.05,
-            indent: 0,
-            endIndent: 0,
-            color: Colors.black,
-            height: 0,
+          ListTile(
+            visualDensity: const VisualDensity(vertical: 4),
+            dense: true,
+            leading: const CircleAvatar(
+              child: Icon(Icons.construction),
+            ),
+            title: const Text(
+              "About us",
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AboutUs(),
+                  ));
+            },
           ),
           ListTile(
             visualDensity: const VisualDensity(vertical: 4),

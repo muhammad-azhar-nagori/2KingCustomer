@@ -11,7 +11,7 @@ import '../../../models/post_model.dart';
 import '../../../providers/post_provider.dart';
 import '../../loginSignup/mytextfield.dart';
 
-// ignore: must_be_immutable
+
 class OpenComments extends StatefulWidget {
   const OpenComments({
     super.key,
@@ -32,18 +32,19 @@ class _OpenCommentsState extends State<OpenComments> {
 
   @override
   Widget build(BuildContext context) {
-    widget.commentsProvider.fetch();
+    final commentsProvider = Provider.of<CommentsProvider>(context);
+    commentsProvider.fetch();
     final commentsList =
         widget.commentsProvider.getCommentByPostID(widget.postModel.postID!);
     final customerProvider = Provider.of<CustomerProvider>(context);
     return SafeArea(
       child: Scaffold(
         body: SizedBox(
-          height: setHeight(50),
+          height: setHeight(90),
           child: ListView.separated(
             separatorBuilder: (context, index) => const Divider(),
             shrinkWrap: true,
-
+            reverse: true,
             scrollDirection: Axis.vertical,
             itemCount: commentsList.length,
             itemBuilder: (context, int index) => ChangeNotifierProvider.value(
@@ -90,18 +91,13 @@ class _OpenCommentsState extends State<OpenComments> {
               ),
               hintText: "Comment your view",
               leading: GestureDetector(
-                  onTap: commentController.text.isNotEmpty
-                      ? () async {
-                          print("s");
-                          await widget.commentsProvider
-                              .uploadCommentDataToFireStore(
-                                  userID:
-                                      FirebaseAuth.instance.currentUser!.uid,
-                                  text: commentController.text,
-                                  postID: widget.postModel.postID!);
-                          commentController.clear();
-                        }
-                      : null,
+                  onTap: () async {
+                    await widget.commentsProvider.uploadCommentDataToFireStore(
+                        userID: FirebaseAuth.instance.currentUser!.uid,
+                        text: commentController.text,
+                        postID: widget.postModel.postID!);
+                    commentController.clear();
+                  },
                   child: const Icon(Icons.send_sharp)),
               radius: getProportionateScreenWidth(20),
               controller: commentController),
@@ -111,16 +107,11 @@ class _OpenCommentsState extends State<OpenComments> {
   }
 }
 
-class CommentTile extends StatefulWidget {
+class CommentTile extends StatelessWidget {
   const CommentTile({
     Key? key,
   }) : super(key: key);
 
-  @override
-  State<CommentTile> createState() => _CommentTileState();
-}
-
-class _CommentTileState extends State<CommentTile> {
   @override
   Widget build(BuildContext context) {
     final customerProvider = Provider.of<CustomerProvider>(context);

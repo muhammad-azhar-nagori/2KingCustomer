@@ -195,26 +195,6 @@ class ReceiveAgreement extends StatelessWidget {
                             ),
                           ),
                           const Divider(thickness: 0.4),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
-                              Text(
-                                "Name",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 11),
-                              ),
-                              Text(
-                                "Estimated Days",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 11),
-                              ),
-                              Text(
-                                "Estimated Charges",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 11),
-                              ),
-                            ],
-                          ),
                           const Divider(thickness: 0.4),
                           SizedBox(
                             child: ListView.builder(
