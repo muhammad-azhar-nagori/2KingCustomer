@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:kingcustomer/Screens/flashscreen/flashscreen.dart';
+import 'package:kingcustomer/providers/about.dart';
 import 'package:kingcustomer/providers/agreement_provider.dart';
 import 'package:kingcustomer/providers/chat_provider.dart';
 import 'package:kingcustomer/providers/comments_provider.dart';
@@ -93,6 +94,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ServiceLogsProvider()),
         ChangeNotifierProvider(create: (_) => InventoryProvider()),
         ChangeNotifierProvider(create: (_) => CommentsProvider()),
+        ChangeNotifierProvider(create: (_) => AboutProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
