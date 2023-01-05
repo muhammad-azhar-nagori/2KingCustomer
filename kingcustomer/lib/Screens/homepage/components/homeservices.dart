@@ -18,8 +18,7 @@ class HomeServices extends StatelessWidget {
     final serviceList = serviceProvider.getList;
 
     final currentProvider = Provider.of<CustomerProvider>(context);
-    final loggedInUser = currentProvider
-        .getUserByID(FirebaseAuth.instance.currentUser!.uid.trim());
+    final loggedInUser = currentProvider.getCurrentUser();
     List<ServiceModel> tempList = List<ServiceModel>.generate(
       0,
       (index) => serviceList.first,

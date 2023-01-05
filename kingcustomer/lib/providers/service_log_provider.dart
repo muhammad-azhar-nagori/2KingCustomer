@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kingcustomer/models/service_log_model.dart';
+import 'package:kingcustomer/providers/customer_provider.dart';
 
 class ServiceLogsProvider with ChangeNotifier {
-  final loggedInUser = FirebaseAuth.instance.currentUser;
+  final loggedInUser = currentUserID;
   List<ServiceLogModel> _servicelist = [];
 
   List<ServiceLogModel> get getServicelist => _servicelist;
@@ -16,7 +17,7 @@ class ServiceLogsProvider with ChangeNotifier {
   Future<void> fetchServiceLog(String logsID) async {
     await FirebaseFirestore.instance
         .collection("orders")
-        .doc(loggedInUser!.uid)
+        .doc(loggedInUser)
         .collection("logs")
         .doc(logsID)
         .collection("services")
@@ -48,7 +49,7 @@ class ServiceLogsProvider with ChangeNotifier {
     DocumentReference<Map<String, dynamic>> doc = await FirebaseFirestore
         .instance
         .collection("orders")
-        .doc(loggedInUser!.uid)
+        .doc(loggedInUser)
         .collection("logs")
         .doc(logsID)
         .collection("services")

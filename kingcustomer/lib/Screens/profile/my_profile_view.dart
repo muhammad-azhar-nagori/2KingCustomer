@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kingcustomer/helper/size_configuration.dart';
 import 'package:provider/provider.dart';
@@ -11,8 +10,7 @@ class MyProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CustomerProvider userProvider = Provider.of<CustomerProvider>(context);
-    final loggedInUser =
-        userProvider.getUserByID(FirebaseAuth.instance.currentUser!.uid.trim());
+    final loggedInUser = userProvider.getCurrentUser();
 
     // final postsList = postProvider.getList;
     return SafeArea(

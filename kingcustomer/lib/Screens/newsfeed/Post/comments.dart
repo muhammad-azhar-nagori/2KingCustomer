@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import '../../../models/post_model.dart';
 import '../../../helper/size_configuration.dart';
@@ -28,14 +29,20 @@ class _CommentsState extends State<Comments> {
     return GestureDetector(
       onTap: () async {
         await commentsProvider.fetch();
+
         Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => OpenComments(
+          context,
+          PageTransition(
+              type: PageTransitionType.bottomToTop,
+              alignment: Alignment.center,
+              child: OpenComments(
                   postModel: widget.postModel,
                   postProvider: widget.postProvider,
                   commentsProvider: commentsProvider),
-            ));
+              duration: const Duration(milliseconds: 290),
+              inheritTheme: true,
+              ctx: context),
+        );
 
         // showCupertinoModalPopup(
         //   context: context,

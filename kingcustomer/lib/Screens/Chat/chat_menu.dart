@@ -129,9 +129,6 @@ class ChatMenuTile extends StatelessWidget {
       title: Text(user.name!),
       subtitle: Text(subtitle),
       leading: CircleAvatar(
-        backgroundImage: const AssetImage(
-          "assets/images/logo-black-half.png",
-        ),
         foregroundImage: image,
       ),
     );

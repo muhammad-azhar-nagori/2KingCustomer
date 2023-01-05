@@ -19,7 +19,7 @@ class ConstructionServices extends StatelessWidget {
 
     final currentProvider = Provider.of<CustomerProvider>(context);
     final loggedInUser = currentProvider
-        .getUserByID(FirebaseAuth.instance.currentUser!.uid.trim());
+        .getCurrentUser();
     List<ServiceModel> tempList = List<ServiceModel>.generate(
       0,
       (index) => serviceList.first,

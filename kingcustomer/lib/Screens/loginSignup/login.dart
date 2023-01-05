@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:kingcustomer/Screens/Dashboard/dashboard.dart';
+import 'package:kingcustomer/Screens/loginSignup/loading_screen.dart';
 import 'package:kingcustomer/Screens/loginSignup/signup.dart';
 import 'package:kingcustomer/Screens/loginSignup/verify_email.dart';
 import 'package:kingcustomer/helper/size_configuration.dart';
@@ -12,12 +13,13 @@ import 'package:provider/provider.dart';
 import '../../providers/agreement_provider.dart';
 import '../../providers/authentication_provider.dart';
 import '../../providers/chat_provider.dart';
-import '../../providers/current_user_provider.dart';
-import '../../providers/service_log_provider.dart';
+import '../../providers/comments_provider.dart';
+import '../../providers/contractor_provider.dart';
+import '../../providers/post_provider.dart';
 import '../../providers/message_provider.dart';
 import '../../providers/order_provider.dart';
-import '../../providers/contractor_provider.dart';
-import '../../providers/worker_provider.dart';
+import '../../providers/service_provider.dart';
+import '../../providers/story_provider.dart';
 import '../../widgets/mycontainer.dart';
 import 'mytextfield.dart';
 
@@ -127,72 +129,24 @@ class _LoginState extends State<Login> {
                       }
                     }
                     if (isAvailable == true) {
-                      showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (context) =>
-                              const Center(child: CircularProgressIndicator()));
                       String isSignedin = await context
                           .read<AuthenticationService>()
                           .signIn(
                               email: emailController.text.trim(),
                               password: passController.text.trim());
+
                       if (isSignedin == "signed in") {
                         await FirebaseAuth.instance.currentUser!.reload();
                         if (FirebaseAuth.instance.currentUser!.emailVerified) {
-                          try {
-                            final workersProvider = Provider.of<WorkerProvider>(
-                                context,
-                                listen: false);
-                            await workersProvider.fetch();
-                          } catch (e) {
-                            print(e);
-                          }
+                          currentUserID =
+                              FirebaseAuth.instance.currentUser!.uid;
 
-                          final ordersProvider = Provider.of<OrdersProvider>(
-                              context,
-                              listen: false);
-                          await ordersProvider.fetch();
-                          try {
-                            final chatProvider = Provider.of<ChatProvider>(
-                                context,
-                                listen: false);
-                            await chatProvider.fetch();
-                          } catch (e) {
-                            print(e);
-                          }
-
-                          try {
-                            final messageProvider =
-                                Provider.of<MessageProvider>(context,
-                                    listen: false);
-
-                            await messageProvider.fetch();
-                          } catch (e) {
-                            print(e);
-                          }
-                          try {
-                            final aggrementProvider =
-                                Provider.of<AgreementProvider>(context,
-                                    listen: false);
-
-                            await aggrementProvider.fetch();
-                          } catch (e) {
-                            print(e);
-                          }
-                          try {
-                            Provider.of<ServiceLogsProvider>(context,
-                                listen: false);
-                          } catch (e) {
-                            print(e);
-                          }
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const Dashboard(),
+                                builder: (context) => const Loading(),
                               ));
                         } else {
-                          Navigator.pop(context);
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
@@ -200,7 +154,6 @@ class _LoginState extends State<Login> {
                               ));
                         }
                       } else {
-                        Navigator.pop(context);
                         showModalBottomSheet(
                           backgroundColor: Colors.transparent,
                           context: context,

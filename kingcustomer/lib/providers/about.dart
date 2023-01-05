@@ -43,7 +43,6 @@ class AboutProvider with ChangeNotifier {
         Map<String, dynamic> dataMap = doc.data() as Map<String, dynamic>;
         _aboutList.insert(0, AboutModel.fromMap(dataMap, doc.id));
       }
-      print(_aboutList);
     });
     notifyListeners();
   }

@@ -38,6 +38,12 @@ class CustomerProvider with ChangeNotifier {
         .first;
   }
 
+  CustomerModel getCurrentUser() {
+    return _list
+        .where((element) => element.userID!.trim() == currentUserID)
+        .first;
+  }
+
   Future<void> uploadUserDataToFireStore({
     String? userID,
     String? email,
@@ -67,6 +73,62 @@ class CustomerProvider with ChangeNotifier {
     });
   }
 
+  Future<void> updateUserCNIC({
+    String? cnic,
+    String? userID,
+  }) async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc("Y1DImckjzK5z2khAEi7o")
+        .collection("contractors")
+        .doc(userID)
+        .update({
+      "cnic": cnic,
+    });
+  }
+
+  Future<void> updateUserGender({
+    bool? gender,
+    String? userID,
+  }) async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc("Y1DImckjzK5z2khAEi7o")
+        .collection("contractors")
+        .doc(userID)
+        .update({
+      "gender": gender,
+    });
+  }
+
+  Future<void> updateUserContact({
+    String? userID,
+    String? contactNumber,
+  }) async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc("Y1DImckjzK5z2khAEi7o")
+        .collection("contractors")
+        .doc(userID)
+        .update({
+      "contactNumber": contactNumber,
+    });
+  }
+
+  Future<void> updateUserName({
+    String? name,
+    String? userID,
+  }) async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc("Y1DImckjzK5z2khAEi7o")
+        .collection("contractors")
+        .doc(userID)
+        .update({
+      "name": name,
+    });
+  }
+
   Future<String> uploadUserImageToStorage({
     required String? imagePath,
     required String? userID,
@@ -85,19 +147,6 @@ class CustomerProvider with ChangeNotifier {
     notifyListeners();
     return getImageUrl;
   }
-
-  Future<void> deletWorkerImageFromStorage(
-      {required String? imageURL,
-      required String? userID,
-      required String? imageType}) async {
-    String? imageName = imageURL!.split('2F')[2].split('?alt')[0];
-    await FirebaseStorage.instance
-        .ref()
-        .child("images")
-        .child(userID!)
-        .child("profileImg")
-        .child(imageName)
-        .delete();
-    notifyListeners();
-  }
 }
+
+String? currentUserID = "";

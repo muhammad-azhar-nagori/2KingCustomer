@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:kingcustomer/providers/customer_provider.dart';
 import '../models/orders_model.dart';
 
 class OrdersProvider with ChangeNotifier {
@@ -8,16 +9,17 @@ class OrdersProvider with ChangeNotifier {
 
   List<OrdersModel> get getList => _list;
 
-  final loggedInUser = FirebaseAuth.instance.currentUser;
+  final loggedInUser = currentUserID;
   void clearList() {
     _list.clear();
+    notifyListeners();
   }
 
   Future<void> fetch() async {
     if (loggedInUser != null) {
       await FirebaseFirestore.instance
           .collection("orders")
-          .doc(loggedInUser!.uid)
+          .doc(loggedInUser)
           .collection("orderDetails")
           .get()
           .then(
@@ -46,7 +48,7 @@ class OrdersProvider with ChangeNotifier {
       required String contractorID}) async {
     final orderID = await FirebaseFirestore.instance
         .collection("orders")
-        .doc(loggedInUser!.uid)
+        .doc(loggedInUser)
         .collection("orderDetails")
         .add({
       "aggrementID": aggrementID,

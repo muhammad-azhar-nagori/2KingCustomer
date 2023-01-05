@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:kingcustomer/providers/customer_provider.dart';
 
 import '../models/message_model.dart';
 
@@ -22,12 +23,12 @@ class MessageProvider with ChangeNotifier {
         .toList();
   }
 
-  final loggedInUser = FirebaseAuth.instance.currentUser;
+  final loggedInUser = currentUserID;
   Future<void> fetch() async {
     if (loggedInUser != null) {
       await FirebaseFirestore.instance
           .collection("chats")
-          .doc(loggedInUser!.uid)
+          .doc(loggedInUser)
           .collection("messages")
           .get()
           .then(
@@ -56,7 +57,7 @@ class MessageProvider with ChangeNotifier {
     DocumentReference<Map<String, dynamic>> doc = await FirebaseFirestore
         .instance
         .collection("chats")
-        .doc(loggedInUser!.uid)
+        .doc(loggedInUser)
         .collection("messages")
         .add({
       "with": chatWith,
@@ -70,7 +71,7 @@ class MessageProvider with ChangeNotifier {
         .doc(chatWith)
         .collection("messages")
         .add({
-      "with": loggedInUser!.uid,
+      "with": loggedInUser,
       "type": type == true ? false : true,
       "text": messagetxt,
       "createdAt": createdAt,
@@ -96,7 +97,7 @@ class MessageProvider with ChangeNotifier {
   }) async {
     await FirebaseFirestore.instance
         .collection("chats")
-        .doc(loggedInUser!.uid)
+        .doc(loggedInUser)
         .collection("messages")
         .doc(messageID)
         .delete();
@@ -112,7 +113,7 @@ class MessageProvider with ChangeNotifier {
   }) async {
     await FirebaseFirestore.instance
         .collection("chats")
-        .doc(loggedInUser!.uid)
+        .doc(loggedInUser)
         .collection("messages")
         .where('with', isEqualTo: otherID)
         .get()

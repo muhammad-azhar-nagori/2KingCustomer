@@ -36,9 +36,7 @@ class _ProfileViewState extends State<ProfileView> {
     final postProvider = Provider.of<PostProvider>(context);
     final postsList = postProvider.getPostByID(user.userID!);
     final currentUserProvider = Provider.of<CustomerProvider>(context);
-    String loggedinUserID = currentUserProvider
-        .getUserByID(FirebaseAuth.instance.currentUser!.uid.trim())
-        .userID!;
+    String loggedinUserID = currentUserProvider.getCurrentUser().userID!;
 
     final double starRating = ratingg(user.rating!);
 
@@ -131,8 +129,10 @@ class _ProfileViewState extends State<ProfileView> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               RatingBar.builder(
-                                initialRating: starRating.toStringAsFixed(1) == "Infinity"
-                                    ? 0:starRating,
+                                initialRating:
+                                    starRating.toStringAsFixed(1) == "Infinity"
+                                        ? 0
+                                        : starRating,
                                 minRating: 0,
                                 maxRating: 5,
                                 itemBuilder: ((context, _) => const Icon(

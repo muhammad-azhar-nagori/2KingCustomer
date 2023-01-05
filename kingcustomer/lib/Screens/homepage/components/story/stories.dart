@@ -9,7 +9,6 @@ import '../../../../models/story_model.dart';
 import '../../../../models/contractor_model.dart';
 import '../../../../providers/story_provider.dart';
 import '../../../../providers/contractor_provider.dart';
-import 'create_story.dart';
 
 class Stories extends StatelessWidget {
   const Stories({Key? key}) : super(key: key);
@@ -24,40 +23,20 @@ class Stories extends StatelessWidget {
     return SizedBox(
         height: getProportionateScreenHeight(140),
         width: setWidth(100),
-        child: Stack(
-          children: [
-            SizedBox(
-              width: setWidth(100),
-              child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.only(left: setWidth(22)),
-                  itemExtent: setWidth(22),
-                  itemCount: storyList.length,
-                  itemBuilder: (context, index) {
-                    return ChangeNotifierProvider.value(
-                        value: storyList[index],
-                        child: StoryTile(
-                          user: userProvider
-                              .getUserByID(storyList[index].userID!),
-                        ));
-                  }),
-            ),
-            MyContainer(
-                height: setHeight(18),
-                width: setWidth(20),
-                child: InkWell(
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    child: const Icon(Icons.add_circle),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CreateStory(),
-                        ),
-                      );
-                    })),
-          ],
+        child: SizedBox(
+          width: setWidth(100),
+          child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemExtent: setWidth(22),
+              itemCount: storyList.length,
+              itemBuilder: (context, index) {
+                return ChangeNotifierProvider.value(
+                    value: storyList[index],
+                    child: StoryTile(
+                      user: userProvider.getUserByID(storyList[index].userID!),
+                    ));
+              }),
         ));
   }
 }

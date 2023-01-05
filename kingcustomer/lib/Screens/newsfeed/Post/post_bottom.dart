@@ -27,9 +27,7 @@ class _PostBottomState extends State<PostBottom> {
   @override
   Widget build(BuildContext context) {
     final currentUserProvider = Provider.of<CustomerProvider>(context);
-    String loggedinUserID = currentUserProvider
-        .getUserByID(FirebaseAuth.instance.currentUser!.uid.trim())
-        .userID!;
+    String loggedinUserID = currentUserProvider.getCurrentUser().userID!;
     final postProvider = Provider.of<PostProvider>(context);
 
     return SizedBox(

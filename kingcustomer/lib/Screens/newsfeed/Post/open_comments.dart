@@ -11,7 +11,6 @@ import '../../../models/post_model.dart';
 import '../../../providers/post_provider.dart';
 import '../../loginSignup/mytextfield.dart';
 
-
 class OpenComments extends StatefulWidget {
   const OpenComments({
     super.key,
@@ -39,6 +38,26 @@ class _OpenCommentsState extends State<OpenComments> {
     final customerProvider = Provider.of<CustomerProvider>(context);
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          leadingWidth: getProportionateScreenWidth(40),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text(
+            "Comments",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: (kToolbarHeight / 100) * 40,
+            ),
+          ),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+        ),
         body: SizedBox(
           height: setHeight(90),
           child: ListView.separated(

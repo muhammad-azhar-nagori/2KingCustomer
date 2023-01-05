@@ -1,38 +1,35 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kingcustomer/Screens/loginSignup/login.dart';
 import 'package:kingcustomer/Screens/profile/edit_profile.dart';
-import 'package:kingcustomer/Screens/profile/edit_services.dart';
 import 'package:kingcustomer/providers/authentication_provider.dart';
 import 'package:kingcustomer/providers/message_provider.dart';
 import 'package:provider/provider.dart';
 import '../../helper/size_configuration.dart';
 import '../../providers/chat_provider.dart';
-import '../../providers/current_user_provider.dart';
-import '../../providers/customer_provider.dart';
-import '../../providers/order_provider.dart';
-import '../../providers/service_provider.dart';
 import '../../providers/contractor_provider.dart';
-import '../../providers/worker_provider.dart';
+import '../../providers/customer_provider.dart';
+import '../../providers/inventory_provider.dart';
+import '../../providers/order_provider.dart';
+import '../../providers/service_log_provider.dart';
+import '../../widgets/are_you_sure.dart';
 import '../profile/my_profile_view.dart';
 import 'aboutus/aboutus.dart';
 
 class Menu extends StatelessWidget {
-  const Menu({
+  Menu({
     Key? key,
   }) : super(key: key);
+  final loggedInUserID = currentUserID;
   @override
   Widget build(BuildContext context) {
-    final serviceProvider = Provider.of<ServiceProvider>(context);
-    final chatProvider = Provider.of<ChatProvider>(context);
-    final currentProvider = Provider.of<CustomerProvider>(context);
-
-    final userProvider = Provider.of<ContractorsProvider>(context);
     final orderstProvider = Provider.of<OrdersProvider>(context);
     final messageProvider = Provider.of<MessageProvider>(context);
+    final slog = Provider.of<ServiceLogsProvider>(context);
 
-    final loggedInUser = currentProvider
-        .getUserByID(FirebaseAuth.instance.currentUser!.uid.trim());
+    final ilog = Provider.of<InventoryProvider>(context);
+    final currentProvider = Provider.of<CustomerProvider>(context);
+    final loggedInUser = currentProvider.getUserByID(loggedInUserID!);
+    final chatProvider = Provider.of<ChatProvider>(context);
     return Scaffold(
       appBar: AppBar(
         leadingWidth: getProportionateScreenWidth(40),
@@ -166,31 +163,41 @@ class Menu extends StatelessWidget {
             },
           ),
           ListTile(
-            visualDensity: const VisualDensity(vertical: 4),
-            dense: true,
-            leading: const CircleAvatar(
-              child: Icon(Icons.logout),
-            ),
-            title: const Text(
-              "Logout",
-              style: TextStyle(
-                fontSize: 18,
+              visualDensity: const VisualDensity(vertical: 4),
+              dense: true,
+              leading: const CircleAvatar(
+                child: Icon(Icons.logout),
               ),
-            ),
-            onTap: () async {
-              await context.read<AuthenticationService>().signOut();
-              chatProvider.clearList();
-              messageProvider.clearList();
-              serviceProvider.clearList();
-              currentProvider.clearList();
-              orderstProvider.clearList();
-              userProvider.clearList();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const Login()),
-              );
-            },
-          ),
+              title: const Text(
+                "Logout",
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              onTap: () => showDialog(
+                    context: context,
+                    builder: (context) => AreYouSure(
+                      title: "Do you want to logout?",
+                      onPressed: () async {
+                        await context
+                            .read<AuthenticationService>()
+                            .signOut()
+                            .then((value) {
+                          chatProvider.clearList();
+                          messageProvider.clearList();
+                          orderstProvider.clearList();
+                          slog.clearList();
+                          ilog.clearList();
+                          currentUserID = "";
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Login()),
+                          );
+                        });
+                      },
+                    ),
+                  )),
           const Divider(
             thickness: 0.05,
             indent: 0,

@@ -1,61 +1,74 @@
-// // ignore_for_file: avoid_print
+// ignore_for_file: empty_catches
 
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/material.dart';
-// import 'package:kingcustomer/providers/current_user_provider.dart';
-// import 'package:provider/provider.dart';
-// import '../../providers/worker_provider.dart';
-// import '../Dashboard/dashboard.dart';
+import 'package:flutter/material.dart';
 
-// class LoadingScreen extends StatefulWidget {
-//   const LoadingScreen({Key? key}) : super(key: key);
+import 'package:provider/provider.dart';
+import '../../providers/agreement_provider.dart';
+import '../../providers/chat_provider.dart';
+import '../../providers/inventory_provider.dart';
+import '../../providers/message_provider.dart';
+import '../../providers/service_log_provider.dart';
+import '../../providers/order_provider.dart';
+import '../../providers/story_provider.dart';
+import '../Dashboard/dashboard.dart';
 
-//   @override
-//   State<LoadingScreen> createState() => _LoadingScreenState();
-// }
+class Loading extends StatefulWidget {
+  const Loading({Key? key, this.userID}) : super(key: key);
+  final String? userID;
+  @override
+  State<Loading> createState() => _LoadingState();
+}
 
-// class _LoadingScreenState extends State<LoadingScreen> {
-//   @override
-//   void initState() {
-//     try {
-//       loadData();
-//     } catch (e) {
-//       print("cannot load data");
-//     }
-//     super.initState();
-//   }
+class _LoadingState extends State<Loading> {
+  @override
+  void initState() {
+    try {
+      loadData();
+    } catch (e) {}
+    super.initState();
+  }
 
-//   loadData() async {
-//     await Future.delayed(const Duration(milliseconds: 0)).then((value) async {
-//       try {
-//         final currentUserProvider =
-//             Provider.of<CustomerProvider>(context, listen: false);
-//         currentUserProvider
-//             .fetch(FirebaseAuth.instance.currentUser!.uid.trim());
-//       } catch (e) {
-//         print(e);
-//       }
-//       try {
-//         final workersProvider =
-//             Provider.of<WorkerProvider>(context, listen: false);
-//         workersProvider.fetch();
-//       } catch (e) {
-//         print(e);
-//       }
+  loadData() async {
+    await Future.delayed(const Duration(milliseconds: 0)).then((value) async {
+      try {
+        final chatProvider = Provider.of<ChatProvider>(context, listen: false);
+        await chatProvider.fetch();
+      } catch (e) {}
+      final storyProvider = Provider.of<StoryProvider>(context, listen: false);
+      await storyProvider.fetch();
 
-//       Navigator.pushReplacement(
-//           context, MaterialPageRoute(builder: (context) => const Dashboard()));
-//     });
-//   }
+      try {
+        final messageProvider =
+            Provider.of<MessageProvider>(context, listen: false);
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       color: Theme.of(context).colorScheme.background,
-//       child: Center(
-//         child:
-//             Image.asset('assets/images/logo-black-full.png', fit: BoxFit.fill),
-//       ),
-//     );
-//   }
-// }
+        await messageProvider.fetch();
+      } catch (e) {}
+      try {
+        final aggrementProvider =
+            Provider.of<AgreementProvider>(context, listen: false);
+
+        await aggrementProvider.fetch();
+        final ordersProvider =
+            Provider.of<OrdersProvider>(context, listen: false);
+        await ordersProvider.fetch();
+        Provider.of<ServiceLogsProvider>(context, listen: false);
+
+        Provider.of<InventoryProvider>(context, listen: false);
+      } catch (e) {}
+
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const Dashboard()));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Theme.of(context).colorScheme.background,
+      child: Center(
+        child:
+            Image.asset('assets/images/logo-black-full.png', fit: BoxFit.fill),
+      ),
+    );
+  }
+}

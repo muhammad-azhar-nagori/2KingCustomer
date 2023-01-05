@@ -19,7 +19,7 @@ class _DashboardState extends State<Dashboard> {
     const ChatMenu(),
     const Newsfeed(),
     const MyOrders(),
-    const Menu(),
+    Menu(),
   ];
   void _onItemTapped(int index) {
     setState(() {
@@ -31,7 +31,7 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
   }
- 
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);

@@ -1,13 +1,16 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kingcustomer/providers/customer_provider.dart';
 import 'package:provider/provider.dart';
 import '../../helper/size_configuration.dart';
-import '../../providers/current_user_provider.dart';
-import '../../providers/customer_provider.dart';
-import 'my_profile_fields.dart';
+import '../../providers/contractor_provider.dart';
+import '../../widgets/bottom_modal_sheet.dart';
+import '../../widgets/mycontainer.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -22,7 +25,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   File? _selectedImageFile;
 
   List list = [];
+  TextEditingController nameController = TextEditingController();
 
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  TextEditingController contactController = TextEditingController();
+
+  TextEditingController cnicController = TextEditingController();
   void pickImage() async {
     final ImagePicker _picker = ImagePicker();
     final _image = await _picker.pickImage(source: ImageSource.gallery);
@@ -43,6 +53,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         _imagePath = _image.path;
       });
     }
+    Navigator.pop(context);
   }
 
   Widget changeProfileImageBottomSheet() {
@@ -79,7 +90,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     size: getProportionateScreenHeight(30),
                   ),
                   onPressed: () {
-                    //pickImage(imageSource: ImageSource.camera);
                     openCam();
                   },
                   label: Text(
@@ -118,13 +128,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
+  String genderText = "";
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<CustomerProvider>(context);
-    final loggedInUser =
-        userProvider.getUserByID(FirebaseAuth.instance.currentUser!.uid.trim());
-    SizeConfig().init(context);
+    final loggedInUser = userProvider.getCurrentUser();
 
+    // nameController.text = loggedInUser.name!;
+    // genderController.text =
+    //     loggedInUser.gender.toString() == "true" ? "Male" : "Female";
+    // passwordController.text = "********";
+    // emailController.text = loggedInUser.cnic!;
+    // contactController.text = loggedInUser.contactNumber!;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -195,8 +210,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       )
                     : CircleAvatar(
                         backgroundColor: Colors.white10,
-                        backgroundImage:
-                            NetworkImage(loggedInUser.profileImageURL!),
+                        backgroundImage: CachedNetworkImageProvider(
+                          loggedInUser.profileImageURL!,
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -253,12 +269,194 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                   ),
                 ),
-                child: MyProfileFields(
-                  contact: loggedInUser.contactNumber!,
-                  email: loggedInUser.email!,
-                  gender: loggedInUser.gender.toString(),
-                  name: loggedInUser.name!,
-                  password: "***********",
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      height: getProportionateScreenHeight(5),
+                    ),
+                    ListTile(
+                      leading: Text(
+                        "Name:     ",
+                        style: TextStyle(
+                            fontSize: getProportionateScreenHeight(20),
+                            fontWeight: FontWeight.bold),
+                      ),
+                      title: Text(
+                        nameController.text.isEmpty
+                            ? loggedInUser.name!
+                            : nameController.text,
+                        style: TextStyle(
+                          fontSize: getProportionateScreenHeight(20),
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.edit,
+                        size: getProportionateScreenHeight(20),
+                      ),
+                      onTap: () => customBottomModalSheet(
+                        button: IconButton(
+                            onPressed: () {
+                              setState(() {});
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(Icons.arrow_forward_rounded)),
+                        context: context,
+                        hight: getProportionateScreenHeight(400),
+                        controller: nameController,
+                        title: "Change Name",
+                        hintText: "Name",
+                      ),
+                    ),
+                    Divider(
+                      thickness: getProportionateScreenHeight(0.2),
+                      color: Colors.black,
+                    ),
+                    ListTile(
+                      leading: Text(
+                        "Gender:  ",
+                        style: TextStyle(
+                            fontSize: getProportionateScreenHeight(20),
+                            fontWeight: FontWeight.bold),
+                      ),
+                      title: Text(
+                        genderText.isEmpty
+                            ? loggedInUser.gender! == true
+                                ? "Male"
+                                : "Female"
+                            : genderText,
+                        style: TextStyle(
+                          fontSize: getProportionateScreenHeight(20),
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.edit,
+                        size: getProportionateScreenHeight(20),
+                      ),
+                      onTap: () => showCupertinoModalPopup(
+                        context: context,
+                        builder: (context) => SingleChildScrollView(
+                          child: MyContainer(
+                            color: Colors.yellow,
+                            height: setHeight(10),
+                            width: setWidth(90),
+                            child: Column(
+                              children: [
+                                SizedBox(height: setHeight(1)),
+                                InkWell(
+                                  onTap: () {
+                                    genderText = "Male";
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    "Male",
+                                    style: TextStyle(
+                                      fontSize:
+                                          getProportionateScreenHeight(20),
+                                    ),
+                                  ),
+                                ),
+                                const Divider(),
+                                InkWell(
+                                  onTap: () {
+                                    genderText = "Famale";
+                                    setState(() {});
+
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    "Female",
+                                    style: TextStyle(
+                                      fontSize:
+                                          getProportionateScreenHeight(20),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      thickness: getProportionateScreenHeight(0.2),
+                      color: Colors.black,
+                    ),
+                    ListTile(
+                      leading: Text(
+                        "Contact:",
+                        style: TextStyle(
+                            fontSize: getProportionateScreenHeight(20),
+                            fontWeight: FontWeight.bold),
+                      ),
+                      title: Text(
+                        contactController.text.isEmpty
+                            ? loggedInUser.contactNumber!
+                            : contactController.text,
+                        style: TextStyle(
+                          fontSize: getProportionateScreenHeight(20),
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.edit,
+                        size: getProportionateScreenHeight(20),
+                      ),
+                      onTap: () => customBottomModalSheet(
+                        button: IconButton(
+                            onPressed: () {
+                              setState(() {});
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(Icons.arrow_forward_rounded)),
+                        context: context,
+                        hight: getProportionateScreenHeight(356),
+                        controller: contactController,
+                        title: "Change Contact",
+                        hintText: "Contact ",
+                      ),
+                    ),
+                    Divider(
+                      thickness: getProportionateScreenHeight(0.2),
+                      color: Colors.black,
+                    ),
+                    ListTile(
+                      leading: Text(
+                        "Cnic:   ",
+                        style: TextStyle(
+                            fontSize: getProportionateScreenHeight(20),
+                            fontWeight: FontWeight.bold),
+                      ),
+                      title: Text(
+                        cnicController.text.isEmpty
+                            ? loggedInUser.cnic!
+                            : cnicController.text,
+                        style: TextStyle(
+                          fontSize: getProportionateScreenHeight(20),
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.edit,
+                        size: getProportionateScreenHeight(20),
+                      ),
+                      onTap: () => customBottomModalSheet(
+                        button: IconButton(
+                            onPressed: () {
+                              setState(() {});
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(Icons.arrow_forward_rounded)),
+                        context: context,
+                        hight: 356,
+                        controller: cnicController,
+                        title: "Change Cnic",
+                        hintText: "XXXXX-XXXXXXXXX-X",
+                      ),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(5),
+                    )
+                  ],
                 ),
               ),
             ),
@@ -299,19 +497,51 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     showDialog(
                       context: context,
                       barrierDismissible: false,
-                      builder: ((context) =>
-                          const Center(child: CircularProgressIndicator())),
+                      builder: ((context) => WillPopScope(
+                            onWillPop: () async => true,
+                            child: const Center(
+                                child: CircularProgressIndicator()),
+                          )),
                     );
-                    final userProvider =
-                        Provider.of<CustomerProvider>(context, listen: false);
-                    await FirebaseFirestore.instance
-                        .collection("users")
-                        .doc("Y1DImckjzK5z2khAEi7o")
-                        .collection("contractors")
-                        .doc(FirebaseAuth.instance.currentUser!.uid.trim())
-                        .update({"profileImageURL": _imagePath});
 
+                    // await userProvider.deleteUserImagefromStorage(
+                    //     imageURL: loggedInUser.profileImageURL,
+                    //     userID: loggedInUser.userID);
+                    if (_imagePath.isNotEmpty) {
+                      final imgURl =
+                          await userProvider.uploadUserImageToStorage(
+                              imagePath: _imagePath,
+                              userID: loggedInUser.userID);
+
+                      await FirebaseFirestore.instance
+                          .collection("users")
+                          .doc("Y1DImckjzK5z2khAEi7o")
+                          .collection("contractors")
+                          .doc(FirebaseAuth.instance.currentUser!.uid.trim())
+                          .update({"profileImageURL": imgURl});
+                    }
+                    if (cnicController.text.isNotEmpty) {
+                      await userProvider.updateUserCNIC(
+                          cnic: cnicController.text,
+                          userID: loggedInUser.userID);
+                    }
+                    if (nameController.text.isNotEmpty) {
+                      await userProvider.updateUserName(
+                          name: nameController.text,
+                          userID: loggedInUser.userID);
+                    }
+                    if (genderText.isNotEmpty) {
+                      await userProvider.updateUserGender(
+                          gender: genderText == "Male" ? true : false,
+                          userID: loggedInUser.userID);
+                    }
+                    if (contactController.text.isNotEmpty) {
+                      await userProvider.updateUserContact(
+                          contactNumber: contactController.text,
+                          userID: loggedInUser.userID);
+                    }
                     await userProvider.fetch();
+
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },

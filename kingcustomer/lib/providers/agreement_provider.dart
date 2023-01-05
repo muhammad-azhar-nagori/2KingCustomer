@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
+import 'package:kingcustomer/providers/customer_provider.dart';
 
 import '../models/agreement_model.dart';
 
@@ -9,16 +10,17 @@ class AgreementProvider with ChangeNotifier {
 
   List<AgreementModel> get getList => _list;
 
-  final loggedInUser = FirebaseAuth.instance.currentUser;
+  final loggedInUser = currentUserID;
   void clearList() {
     _list.clear();
+    notifyListeners();
   }
 
   Future<void> fetch() async {
     if (loggedInUser != null) {
       await FirebaseFirestore.instance
           .collection("chats")
-          .doc(loggedInUser!.uid)
+          .doc(loggedInUser)
           .collection("agreements")
           .get()
           .then(
@@ -41,7 +43,7 @@ class AgreementProvider with ChangeNotifier {
   updateStatus(String agreementID, bool status, String contractorID) async {
     await FirebaseFirestore.instance
         .collection("chats")
-        .doc(loggedInUser!.uid)
+        .doc(loggedInUser)
         .collection("agreements")
         .doc(agreementID)
         .update({"status": status});
@@ -58,7 +60,7 @@ class AgreementProvider with ChangeNotifier {
   deleteAgreement(String agreementID) async {
     await FirebaseFirestore.instance
         .collection("chats")
-        .doc(loggedInUser!.uid)
+        .doc(loggedInUser!)
         .collection("agreements")
         .doc(agreementID)
         .delete();
