@@ -17,8 +17,6 @@ class HomeServices extends StatelessWidget {
     final serviceProvider = Provider.of<ServiceProvider>(context);
     final serviceList = serviceProvider.getList;
 
-    final currentProvider = Provider.of<CustomerProvider>(context);
-    final loggedInUser = currentProvider.getCurrentUser();
     List<ServiceModel> tempList = List<ServiceModel>.generate(
       0,
       (index) => serviceList.first,

@@ -3,7 +3,6 @@ import 'package:kingcustomer/models/contractor_model.dart';
 import 'package:kingcustomer/providers/contractor_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../../helper/size_configuration.dart';
-import '../../../../models/service_model.dart';
 
 import 'worker_list_tile.dart';
 
@@ -45,15 +44,6 @@ class WorkersList extends StatelessWidget {
             fontSize: (kToolbarHeight / 100) * 40,
           ),
         ),
-        actions: [
-          IconButton(
-            color: Colors.black,
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search,
-            ),
-          ),
-        ],
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -63,10 +53,10 @@ class WorkersList extends StatelessWidget {
                 height: setHeight(2),
               ),
           scrollDirection: Axis.vertical,
-          itemCount: _contractorsList() .length,
+          itemCount: _contractorsList().length,
           physics: const BouncingScrollPhysics(),
           itemBuilder: (context, int index) => ChangeNotifierProvider.value(
-                value: _contractorsList() [index],
+                value: _contractorsList()[index],
                 child: WorkerTile(serviceName: serviceName),
               )),
     );

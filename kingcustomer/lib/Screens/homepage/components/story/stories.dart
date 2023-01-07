@@ -64,6 +64,8 @@ class StoryTile extends StatelessWidget {
               PageTransition(
                 type: PageTransitionType.bottomToTop,
                 child: StoryView(
+                  caption: storyModel.caption,
+                  postTime: storyModel.postedTime.toString().split(" ").first,
                   itemURL: storyModel.imageURL,
                   userModel: userModel,
                 ),

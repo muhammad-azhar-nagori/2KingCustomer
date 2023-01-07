@@ -7,12 +7,14 @@ import '../../../../models/contractor_model.dart';
 class StoryView extends StatefulWidget {
   final ContractorsModel? userModel;
   final String? itemURL;
-  const StoryView({
-    super.key,
-    required this.userModel,
-    this.itemURL,
-  });
-
+  final String? postTime;
+  final String? caption;
+  const StoryView(
+      {super.key,
+      required this.postTime,
+      required this.userModel,
+      required this.itemURL,
+      required this.caption});
   @override
   State<StoryView> createState() => _StoryViewState();
 }
@@ -111,8 +113,8 @@ class _StoryViewState extends State<StoryView>
               SizedBox(
                 width: setWidth(100),
                 child: Center(
-                  child: Image.network(
-                    widget.itemURL!,
+                  child: CachedNetworkImage(
+                    imageUrl: widget.itemURL!,
                     fit: BoxFit.contain,
                   ),
                 ),

@@ -4,7 +4,6 @@ import 'package:kingcustomer/Screens/profile/profile_view.dart';
 import 'package:kingcustomer/helper/size_configuration.dart';
 import 'package:kingcustomer/models/contractor_model.dart';
 import 'package:provider/provider.dart';
-import '../../../../models/workers_model.dart';
 
 class WorkerTile extends StatelessWidget {
   const WorkerTile({super.key, required this.serviceName});
@@ -73,97 +72,114 @@ class WorkerTile extends StatelessWidget {
                   Container(
                       height: setHeight(53),
                       color: const Color.fromARGB(255, 255, 255, 255),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: getProportionateScreenHeight(10),
-                          ),
-                          SizedBox(
-                            height: setHeight(20),
-                            width: setWidth(50),
-                            child: CachedNetworkImage(
-                                imageUrl: contractorModel.profileImageURL!),
-                          ),
-                          Text(
-                            "Email: " + contractorModel.email!,
-                            style: TextStyle(
-                              fontSize: getProportionateScreenHeight(20),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: getProportionateScreenHeight(10),
                             ),
-                          ),
-                          Text(
-                            "CNIC: " + contractorModel.cnic!,
-                            style: TextStyle(
-                              fontSize: getProportionateScreenHeight(20),
-                            ),
-                          ),
-                          Text(
-                            "Experience: " + contractorModel.services!.first,
-                            style: TextStyle(
-                              fontSize: getProportionateScreenHeight(20),
-                            ),
-                          ),
-                          Text(
-                            "Gender: " +
-                                (contractorModel.gender! ? "Male" : "Female"),
-                            style: TextStyle(
-                              fontSize: getProportionateScreenHeight(20),
-                            ),
-                          ),
-                          Text(
-                            "Contact: " + contractorModel.contactNumber!,
-                            style: TextStyle(
-                              fontSize: getProportionateScreenHeight(20),
-                            ),
-                          ),
-                          Text(
-                            "Status: " + contractorModel.status.toString(),
-                            style: TextStyle(
-                              fontSize: getProportionateScreenHeight(20),
-                            ),
-                          ),
-                          const Divider(
-                            thickness: 0.2,
-                            color: Colors.black,
-                            height: 0,
-                          ),
-                          Text(
-                            "Bio: ",
-                            style: TextStyle(
-                              fontSize: getProportionateScreenHeight(20),
-                            ),
-                          ),
-                          const Divider(
-                            thickness: 0.2,
-                            color: Colors.black,
-                            height: 0,
-                          ),
-                          Spacer(),
-                          Center(
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  fixedSize: Size(
-                                      getProportionateScreenWidth(200),
-                                      getProportionateScreenHeight(50)),
-                                  side: const BorderSide(
-                                    width: 0,
-                                  ),
-                                  elevation: 3,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30)),
+                            Center(
+                              child: SizedBox(
+                                height: setHeight(20),
+                                width: setWidth(50),
+                                child: ClipOval(
+                                  child: CachedNetworkImage(
+                                      imageUrl:
+                                          contractorModel.profileImageURL!),
                                 ),
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ProfileView(
-                                            userID: contractorModel.userID),
-                                      ));
-                                },
-                                child: const Text("Visit Profile")),
-                          )
-                        ],
+                              ),
+                            ),
+                            const Divider(
+                              thickness: 0.2,
+                              color: Colors.black,
+                              height: 0,
+                            ),
+                            Text(
+                              "Email: " + contractorModel.email!,
+                              style: TextStyle(
+                                fontSize: getProportionateScreenHeight(20),
+                              ),
+                            ),
+                            const Divider(
+                              thickness: 0.2,
+                              color: Colors.black,
+                              height: 0,
+                            ),
+                            Text(
+                              "CNIC: " + contractorModel.cnic!,
+                              style: TextStyle(
+                                fontSize: getProportionateScreenHeight(20),
+                              ),
+                            ),
+                            const Divider(
+                              thickness: 0.2,
+                              color: Colors.black,
+                              height: 0,
+                            ),
+                            Text(
+                              "Experience: " + contractorModel.services!.first,
+                              style: TextStyle(
+                                fontSize: getProportionateScreenHeight(20),
+                              ),
+                            ),
+                            const Divider(
+                              thickness: 0.2,
+                              color: Colors.black,
+                              height: 0,
+                            ),
+                            Text(
+                              "Gender: " +
+                                  (contractorModel.gender! ? "Male" : "Female"),
+                              style: TextStyle(
+                                fontSize: getProportionateScreenHeight(20),
+                              ),
+                            ),
+                            const Divider(
+                              thickness: 0.2,
+                              color: Colors.black,
+                              height: 0,
+                            ),
+                            Text(
+                              "Contact: " + contractorModel.contactNumber!,
+                              style: TextStyle(
+                                fontSize: getProportionateScreenHeight(20),
+                              ),
+                            ),
+                            const Divider(
+                              thickness: 0.2,
+                              color: Colors.black,
+                              height: 0,
+                            ),
+                            const Spacer(),
+                            Center(
+                              child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize: Size(
+                                        getProportionateScreenWidth(200),
+                                        getProportionateScreenHeight(50)),
+                                    side: const BorderSide(
+                                      width: 0,
+                                    ),
+                                    elevation: 3,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ProfileView(
+                                              userID: contractorModel.userID),
+                                        ));
+                                  },
+                                  child: const Text("Visit Profile")),
+                            )
+                          ],
+                        ),
                       )),
                 ],
               ),
